@@ -31,13 +31,13 @@ export default function Home() {
       <footer className="flex gap-6 items-center justify-center">
         <a
           className="hover:underline hover:underline-offset-4"
-          href="/privacy"
+          href="/privacy-policy"
         >
           Privacy
         </a>
         <a
           className="hover:underline hover:underline-offset-4"
-          href="/terms"
+          href="/terms-of-use"
         >
           Terms
         </a>
