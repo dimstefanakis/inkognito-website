@@ -81,7 +81,7 @@ export default function TermsOfService() {
 
         <h2 className="text-2xl font-semibold mb-2">10. Disclaimer</h2>
         <p>
-          The service is provided "as is" without warranties of any kind. We are not responsible for the accuracy or content of user submissions.
+          The service is provided &ldquo;as is&rdquo; without warranties of any kind. We are not responsible for the accuracy or content of user submissions.
           Users are solely responsible for their own posts and interactions.
         </p>
 
