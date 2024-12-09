@@ -4,9 +4,9 @@ import { createClient } from '@/utils/supabase/server'
 export const runtime = 'edge'
 
 export async function POST(request: NextRequest) {
-  const { latitude, longitude, range } = await request.json();
+  const { lat, lng, range } = await request.json();
   
-  if (!latitude || !longitude || !range) {
+  if (!lat || !lng || !range) {
     return Response.json(
       { error: 'Missing required parameters: latitude, longitude, and range' },
       { status: 400 }
@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
-    .gte("lat", parseFloat(latitude) - parseFloat(range))
-    .lte("lat", parseFloat(latitude) + parseFloat(range))
-    .gte("lng", parseFloat(longitude) - parseFloat(range))
-    .lte("lng", parseFloat(longitude) + parseFloat(range))
+    .gte("lat", parseFloat(lat) - parseFloat(range))
+    .lte("lat", parseFloat(lat) + parseFloat(range))
+    .gte("lng", parseFloat(lng) - parseFloat(range))
+    .lte("lng", parseFloat(lng) + parseFloat(range))
     .order("created_at", { ascending: false })
     .limit(100)
 
@@ -29,5 +29,5 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: error.message }, { status: 500 })
   }
 
-  return Response.json({ data })
+  return Response.json(data)
 }
