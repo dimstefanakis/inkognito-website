@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from("posts")
     .select("*")
-    .gte("lat", parseFloat(lat) - parseFloat(range))
-    .lte("lat", parseFloat(lat) + parseFloat(range))
-    .gte("lng", parseFloat(lng) - parseFloat(range))
-    .lte("lng", parseFloat(lng) + parseFloat(range))
+    .gte("latitude", parseFloat(lat) - parseFloat(range))
+    .lte("latitude", parseFloat(lat) + parseFloat(range))
+    .gte("longitude", parseFloat(lng) - parseFloat(range))
+    .lte("longitude", parseFloat(lng) + parseFloat(range))
     .order("created_at", { ascending: false })
     .limit(100)
 
