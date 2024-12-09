@@ -19,7 +19,8 @@ export async function POST(
     }
 
     return Response.json({ data }, { status: 200 })
-  } catch (e) {
+  } catch (error) {
+    console.log(error)
     return Response.json(
       { error: 'Failed to increment view' },
       { status: 500 }
