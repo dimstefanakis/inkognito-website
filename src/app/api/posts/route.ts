@@ -4,11 +4,8 @@ import { createClient } from '@/utils/supabase/server'
 export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
-  const latitude = searchParams.get('latitude')
-  const longitude = searchParams.get('longitude')
-  const range = searchParams.get('range')
-
+  const { latitude, longitude, range } = await request.json();
+  
   if (!latitude || !longitude || !range) {
     return Response.json(
       { error: 'Missing required parameters: latitude, longitude, and range' },
