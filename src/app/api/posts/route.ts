@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient()
 
   const { data, error } = await supabase
-    .from("posts")
+    .from("posts_public")
     .select("*")
     .gte("lat", parseFloat(lat) - parseFloat(range))
     .lte("lat", parseFloat(lat) + parseFloat(range))

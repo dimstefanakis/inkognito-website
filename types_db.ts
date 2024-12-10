@@ -167,6 +167,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_public"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "replies_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -207,7 +214,72 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      posts_public: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string | null
+          lat: number | null
+          lng: number | null
+          views: number | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          lat?: number | null
+          lng?: number | null
+          views?: number | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          lat?: number | null
+          lng?: number | null
+          views?: number | null
+        }
+        Relationships: []
+      }
+      replies_public: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string | null
+          post_id: string | null
+          upvotes: number | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          post_id?: string | null
+          upvotes?: number | null
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          post_id?: string | null
+          upvotes?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       increment_multiple_views: {

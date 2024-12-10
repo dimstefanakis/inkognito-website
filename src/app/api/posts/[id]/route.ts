@@ -10,7 +10,7 @@ export async function GET(
   const supabase = await createClient()
   const { id } = await params;
 
-  const { data, error } = await supabase.from('posts').select('*').eq('id', id).single()
+  const { data, error } = await supabase.from('posts_public').select('*').eq('id', id).single()
   if (error) {
     return Response.json({ error: error.message }, { status: 500 })
   }
