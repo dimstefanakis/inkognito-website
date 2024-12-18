@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import { createHash } from 'crypto'
+import { SupabaseClient } from '@supabase/supabase-js'
 
 // export const runtime = 'edge'
 
@@ -13,7 +14,11 @@ function generatePostUserIdHash(postId: string, userId: string) {
   return fourDigitId.toString().padStart(4, '0')
 }
 
-async function findUniqueThreadId(supabase: any, postId: string, userId: string) {
+async function findUniqueThreadId(
+  supabase: SupabaseClient,
+  postId: string,
+  userId: string
+) {
   let attempts = 0;
   const maxAttempts = 5;
 
