@@ -17,23 +17,22 @@ function generatePostUserIdHash(postId: string, userId: string) {
 async function findUniqueThreadId(
   supabase: SupabaseClient,
   postId: string,
-  userId: string
+  userId: string | null
 ) {
   let attempts = 0;
   const maxAttempts = 5;
 
   while (attempts < maxAttempts) {
-    const threadId = generatePostUserIdHash(postId, userId + attempts);
+    const threadId = generatePostUserIdHash(postId, (userId || '') + attempts);
 
     // Check if this thread_id already exists for this post
-    const { data: existingThread } = await supabase
+    const { data } = await supabase
       .from('replies')
       .select('thread_id')
       .eq('post_id', postId)
       .eq('thread_id', threadId)
-      .single();
 
-    if (!existingThread) {
+    if (!data || data.length === 0) {
       return threadId;
     }
 
@@ -66,10 +65,10 @@ export async function POST(
       .select('thread_id')
       .eq('post_id', id)
       .eq('user_id', user_id)
-      .single()
 
-    if (existingThread.data) {
-      threadId = existingThread.data.thread_id
+    // check if the user has already replied to the post at least once
+    if (existingThread.data && existingThread.data.length > 0) {
+      threadId = existingThread.data[0].thread_id
     } else {
       threadId = await findUniqueThreadId(supabase, id, user_id)
     }
