@@ -7,7 +7,8 @@ import { SupabaseClient } from '@supabase/supabase-js'
 
 function generatePostUserIdHash(postId: string, userId: string) {
   if (!userId) {
-    return null
+    const randomId = Math.floor(1000 + Math.random() * 9000).toString()
+    return randomId
   }
   const hash = createHash('sha256').update(`${postId}-${userId}`).digest('hex')
   const fourDigitId = parseInt(hash.substring(0, 8), 16) % 10000
