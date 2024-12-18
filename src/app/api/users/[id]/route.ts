@@ -14,11 +14,14 @@ export async function GET(
     .from("users")
     .select()
     .eq("id", id)
-    .single()
 
   if (error) {
     return Response.json({ error: error.message }, { status: 500 })
   }
 
-  return Response.json(data)
+  if (data && data.length > 0) {
+    return Response.json(data[0])
+  }
+
+  return Response.json({ error: 'User not found' }, { status: 404 })
 }
