@@ -54,6 +54,7 @@ export async function POST(
     try {
       ({ content, user_id } = await request.json());
     } catch (error) {
+      console.log(error)
       return Response.json(
         { error: 'Invalid JSON in request body' },
         { status: 400 }
