@@ -145,6 +145,7 @@ export type Database = {
           created_at: string
           id: string
           post_id: string | null
+          thread_id: number | null
           upvotes: number | null
           user_id: string | null
         }
@@ -153,6 +154,7 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string | null
+          thread_id?: number | null
           upvotes?: number | null
           user_id?: string | null
         }
@@ -161,6 +163,7 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string | null
+          thread_id?: number | null
           upvotes?: number | null
           user_id?: string | null
         }
@@ -241,7 +244,7 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "reports_reporter_id_fkey1"
+            foreignKeyName: "reports_reporter_id_fkey"
             columns: ["reporter_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -387,6 +390,26 @@ export type Database = {
         }
         Returns: number
       }
+      confessions_personalized_feed: {
+        Args: {
+          user_lat: number
+          user_lng: number
+          input_user_id?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          is_pinned: boolean
+          is_admin_note: boolean
+          reply_count: number
+          sort_order: number
+          score: number
+        }[]
+      }
       get_posts_by_distance: {
         Args: {
           input_lat: number
@@ -415,6 +438,25 @@ export type Database = {
         }
         Returns: undefined
       }
+      posts_filtered_feed: {
+        Args: {
+          user_lat: number
+          user_lng: number
+          input_user_id?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          is_pinned: boolean
+          is_admin_note: boolean
+          reply_count: number
+          sort_order: number
+        }[]
+      }
       posts_localized_feed: {
         Args: {
           user_lat: number
@@ -432,6 +474,32 @@ export type Database = {
           reply_count: number
           sort_order: number
           score: number
+        }[]
+      }
+      replies_filtered_feed:
+      | {
+        Args: {
+          input_user_id?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          post_id: string
+          upvotes: number
+        }[]
+      }
+      | {
+        Args: {
+          input_user_id?: string
+          input_post_id?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          post_id: string
+          upvotes: number
         }[]
       }
     }
