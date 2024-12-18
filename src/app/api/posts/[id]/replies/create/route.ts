@@ -49,7 +49,16 @@ export async function POST(
   try {
     const supabase = await createClient()
     const { id } = await params;
-    const { content, user_id } = await request.json()
+    
+    let content, user_id;
+    try {
+      ({ content, user_id } = await request.json());
+    } catch (error) {
+      return Response.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
 
     if (!content) {
       return Response.json(
@@ -73,13 +82,15 @@ export async function POST(
       threadId = await findUniqueThreadId(supabase, id, user_id)
     }
 
-    let threadIdNumber = null
-    try {
-      if (threadId) {
-        threadIdNumber = Number(threadId)
+    let threadIdNumber: number | null = null;
+    if (threadId) {
+      threadIdNumber = Number(threadId);
+      if (isNaN(threadIdNumber)) {
+        return Response.json(
+          { error: 'Invalid thread ID generated' },
+          { status: 500 }
+        );
       }
-    } catch (error) {
-      console.log(error)
     }
 
     let isAuthor = false
@@ -88,7 +99,7 @@ export async function POST(
         .from('posts')
         .select('user_id')
         .eq('id', id)
-        .eq('user_id', user_id || null)
+        .eq('user_id', user_id || '')
       if (author.data && author.data.length > 0) {
         isAuthor = true
       }
@@ -112,10 +123,10 @@ export async function POST(
 
     return Response.json(data, { status: 201 })
   } catch (error) {
-    console.log(error)
+    console.error('Error in POST /api/posts/[id]/replies/create:', error);
     return Response.json(
-      { error: 'Invalid request body' },
-      { status: 400 }
-    )
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
