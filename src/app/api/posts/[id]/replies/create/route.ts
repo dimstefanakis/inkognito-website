@@ -30,7 +30,7 @@ async function findUniqueThreadId(
       .from('replies')
       .select('thread_id')
       .eq('post_id', postId)
-      .eq('thread_id', threadId || '')
+      .eq('thread_id', threadId ? threadId : '')
 
     if (!data || data.length === 0) {
       return threadId;
