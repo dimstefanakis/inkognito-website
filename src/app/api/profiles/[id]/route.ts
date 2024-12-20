@@ -10,15 +10,17 @@ export async function GET(
   const supabase = await createClient()
   const { id } = await params;
 
-  const { data: profileData, error: profileError } = await supabase
+  const { data, error } = await supabase
     .from("profiles")
     .select()
     .eq("user_id", id)
-    .single()
 
-  if (profileError) {
-    return Response.json({ error: profileError.message }, { status: 500 })
+  if (data && data.length > 0) {
+    return Response.json(data[0]);
+  }
+  if (error) {
+    return Response.json({ error: error.message }, { status: 500 });
   }
 
-  return Response.json(profileData)
+  return Response.json({ error: "Profile not found" }, { status: 404 });
 }

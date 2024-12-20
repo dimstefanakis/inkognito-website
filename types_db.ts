@@ -144,6 +144,7 @@ export type Database = {
           content: string | null
           created_at: string
           id: string
+          is_author: boolean
           post_id: string | null
           thread_id: number | null
           upvotes: number | null
@@ -153,6 +154,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           id?: string
+          is_author?: boolean
           post_id?: string | null
           thread_id?: number | null
           upvotes?: number | null
@@ -162,6 +164,7 @@ export type Database = {
           content?: string | null
           created_at?: string
           id?: string
+          is_author?: boolean
           post_id?: string | null
           thread_id?: number | null
           upvotes?: number | null
@@ -426,6 +429,44 @@ export type Database = {
           reply_count: number
         }[]
       }
+      get_user_posts: {
+        Args: {
+          input_user_id: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          is_pinned: boolean
+          is_admin_note: boolean
+          reply_count: number
+          last_reply_at: string
+          my_latest_reply: Json
+          recent_replies: Json
+        }[]
+      }
+      get_user_replied_posts: {
+        Args: {
+          input_user_id: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          is_pinned: boolean
+          is_admin_note: boolean
+          reply_count: number
+          last_reply_at: string
+          my_latest_reply: Json
+          recent_replies: Json
+        }[]
+      }
       increment_multiple_views: {
         Args: {
           post_ids: string[]
@@ -476,20 +517,7 @@ export type Database = {
           score: number
         }[]
       }
-      replies_filtered_feed:
-      | {
-        Args: {
-          input_user_id?: string
-        }
-        Returns: {
-          id: string
-          created_at: string
-          content: string
-          post_id: string
-          upvotes: number
-        }[]
-      }
-      | {
+      replies_filtered_feed: {
         Args: {
           input_user_id?: string
           input_post_id?: string
@@ -500,6 +528,8 @@ export type Database = {
           content: string
           post_id: string
           upvotes: number
+          thread_id: number
+          is_author: boolean
         }[]
       }
     }
