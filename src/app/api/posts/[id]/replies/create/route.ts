@@ -7,13 +7,15 @@ import { SupabaseClient } from '@supabase/supabase-js'
 
 function generatePostUserIdHash(postId: string, userId: string) {
   if (!userId) {
-    const randomId = Math.floor(1000 + Math.random() * 9000).toString()
-    return randomId
+    // Generate a random number between 1000 and 9999
+    const randomId = Math.floor(1000 + Math.random() * 9000).toString();
+    return randomId;
   }
-  const hash = createHash('sha256').update(`${postId}-${userId}`).digest('hex')
-  const fourDigitId = parseInt(hash.substring(0, 8), 16) % 10000
-  return fourDigitId.toString().padStart(4, '0')
-}
+  const hash = createHash('sha256').update(`${postId}-${userId}`).digest('hex');
+  // Ensure the result is between 1000 and 9999
+  const fourDigitId = (parseInt(hash.substring(0, 8), 16) % 9000) + 1000;
+  return fourDigitId.toString();
+} 
 
 async function findUniqueThreadId(
   supabase: SupabaseClient,
@@ -50,7 +52,7 @@ export async function POST(
   try {
     const supabase = await createClient()
     const { id } = await params;
-    
+
     let content, user_id;
     try {
       ({ content, user_id } = await request.json());
