@@ -34,6 +34,58 @@ export type Database = {
   }
   public: {
     Tables: {
+      moderation_logs: {
+        Row: {
+          action_taken: string | null
+          categories: Json | null
+          created_at: string
+          id: string
+          post_id: string | null
+          reply_id: string | null
+          severity_score: number
+        }
+        Insert: {
+          action_taken?: string | null
+          categories?: Json | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reply_id?: string | null
+          severity_score: number
+        }
+        Update: {
+          action_taken?: string | null
+          categories?: Json | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reply_id?: string | null
+          severity_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_logs_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_logs_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "replies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_logs_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "replies_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string | null
@@ -70,33 +122,51 @@ export type Database = {
         Row: {
           content: string | null
           created_at: string
+          hidden: boolean | null
+          hidden_reason: string | null
           id: string
           is_admin_note: boolean | null
           is_pinned: boolean | null
+          last_review_at: string | null
           lat: number | null
           lng: number | null
+          moderated_at: string | null
+          moderation_score: number | null
+          requires_review: boolean | null
           user_id: string | null
           views: number | null
         }
         Insert: {
           content?: string | null
           created_at?: string
+          hidden?: boolean | null
+          hidden_reason?: string | null
           id?: string
           is_admin_note?: boolean | null
           is_pinned?: boolean | null
+          last_review_at?: string | null
           lat?: number | null
           lng?: number | null
+          moderated_at?: string | null
+          moderation_score?: number | null
+          requires_review?: boolean | null
           user_id?: string | null
           views?: number | null
         }
         Update: {
           content?: string | null
           created_at?: string
+          hidden?: boolean | null
+          hidden_reason?: string | null
           id?: string
           is_admin_note?: boolean | null
           is_pinned?: boolean | null
+          last_review_at?: string | null
           lat?: number | null
           lng?: number | null
+          moderated_at?: string | null
+          moderation_score?: number | null
+          requires_review?: boolean | null
           user_id?: string | null
           views?: number | null
         }
@@ -255,6 +325,50 @@ export type Database = {
           },
         ]
       }
+      user_trust_scores: {
+        Row: {
+          created_at: string
+          flagged_posts: number | null
+          id: string
+          is_restricted: boolean | null
+          last_violation_at: string | null
+          total_posts: number | null
+          trust_score: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          flagged_posts?: number | null
+          id?: string
+          is_restricted?: boolean | null
+          last_violation_at?: string | null
+          total_posts?: number | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          flagged_posts?: number | null
+          id?: string
+          is_restricted?: boolean | null
+          last_violation_at?: string | null
+          total_posts?: number | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_trust_scores_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           advertising_id: string | null
@@ -262,6 +376,7 @@ export type Database = {
           email: string | null
           expo_push_token: string | null
           full_name: string | null
+          gender: Database["public"]["Enums"]["gender_type"] | null
           id: string
           is_subscribed: boolean | null
         }
@@ -271,6 +386,7 @@ export type Database = {
           email?: string | null
           expo_push_token?: string | null
           full_name?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"] | null
           id?: string
           is_subscribed?: boolean | null
         }
@@ -280,6 +396,7 @@ export type Database = {
           email?: string | null
           expo_push_token?: string | null
           full_name?: string | null
+          gender?: Database["public"]["Enums"]["gender_type"] | null
           id?: string
           is_subscribed?: boolean | null
         }
@@ -534,6 +651,7 @@ export type Database = {
       }
     }
     Enums: {
+      gender_type: "male" | "female" | "other"
       report_reason:
       | "inappropriate"
       | "spam"

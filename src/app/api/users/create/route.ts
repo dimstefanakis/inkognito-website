@@ -9,7 +9,10 @@ export async function POST(request: NextRequest) {
     const userData = await request.json()
     const { data, error } = await supabase
       .from("users")
-      .insert(userData)
+      .insert({
+        ...(userData ? userData : {}),
+        is_subscribed: false,
+      })
       .select()
       .single()
 
