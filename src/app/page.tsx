@@ -22,7 +22,7 @@ export default function Home() {
         <div className="text-center">
           <div className="text-6xl mb-4">🚧</div>
           <h1 className="text-2xl font-semibold max-w-md p-4">
-            The Inkognito website is coming soon!
+            Inkognito is coming soon on android
           </h1>
         </div>
       </main>
