@@ -33,7 +33,7 @@ export function ConfessionDisplay({ confession, distance, nearbyCount, onSeeMore
         height={128}
         className="rounded-full mb-8"
       />
-      <p className="text-2xl mb-6 leading-relaxed break-words">"{confession.text}"</p>
+      <p className="text-2xl mb-6 leading-relaxed break-words">&ldquo;{confession.text}&rdquo;</p>
       <div className="flex items-center justify-center gap-2 text-muted-foreground mb-10">
         <span>- {confession.gender === 'male' ? 'Male' : confession.gender === 'female' ? 'Female' : 'Other'}</span>
         <span>•</span>

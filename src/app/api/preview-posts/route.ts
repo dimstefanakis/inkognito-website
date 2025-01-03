@@ -1,8 +1,7 @@
-import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
-import type { Database } from '../../../../types_db'
-export async function GET(request: Request) {
+
+export async function GET() {
   try {
     const supabase = await createClient()
     const { data: posts, error } = await supabase
@@ -17,6 +16,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ posts })
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
