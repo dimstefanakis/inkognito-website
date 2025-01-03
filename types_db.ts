@@ -34,6 +34,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_config: {
+        Row: {
+          created_at: string
+          id: string
+          queue_drop_chance: number | null
+          queue_enabled: boolean | null
+          queue_wait_time_minutes: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          queue_drop_chance?: number | null
+          queue_enabled?: boolean | null
+          queue_wait_time_minutes?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          queue_drop_chance?: number | null
+          queue_enabled?: boolean | null
+          queue_wait_time_minutes?: number | null
+        }
+        Relationships: []
+      }
       moderation_logs: {
         Row: {
           action_taken: string | null
@@ -444,6 +468,7 @@ export type Database = {
         Row: {
           content: string | null
           created_at: string | null
+          gender: Database["public"]["Enums"]["gender_type"] | null
           id: string | null
           is_admin_note: boolean | null
           is_pinned: boolean | null
@@ -528,6 +553,7 @@ export type Database = {
           reply_count: number
           sort_order: number
           score: number
+          gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
       get_posts_by_distance: {
@@ -544,6 +570,23 @@ export type Database = {
           views: number
           distance: number
           reply_count: number
+        }[]
+      }
+      get_top_onboarding_posts: {
+        Args: {
+          input_lat: number
+          input_lng: number
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          distance: number
+          reply_count: number
+          gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
       get_user_posts: {
@@ -613,6 +656,7 @@ export type Database = {
           is_admin_note: boolean
           reply_count: number
           sort_order: number
+          gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
       posts_localized_feed: {
@@ -632,6 +676,7 @@ export type Database = {
           reply_count: number
           sort_order: number
           score: number
+          gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
       replies_filtered_feed: {
