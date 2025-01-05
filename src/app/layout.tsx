@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider"
-import { HydrateBranch } from "@/components/HydrateBranch";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -36,7 +35,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <HydrateBranch />
           {children}
         </ThemeProvider>
       </body>

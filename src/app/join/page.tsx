@@ -1,13 +1,13 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LocationPrompt } from "@/components/LocationPrompt";
 import { ConfessionDisplay } from "@/components/Confession";
 import { getLocation, calculateDistance } from "@/utils/geolocation";
 import { Skeleton } from "@/components/ui/skeleton";
-import branch from 'branch-sdk';
 import type { Tables } from "../../../types_db";
+
+const branchKey = 'key_live_gypXDlYHiBAQqz2WwSZZPbjnAEebvJZk'
 
 export default function JoinPage() {
   const router = useRouter();
@@ -18,6 +18,23 @@ export default function JoinPage() {
   const [distance, setDistance] = useState<number | null>(null);
   const [nearbyCount, setNearbyCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function initAndFetch() {
+      const BranchSDK = (await import('branch-sdk')).default
+
+      BranchSDK.init(branchKey)
+
+      BranchSDK.data(function (err, data) {
+        if (err) {
+          console.warn(`Branch failed to resolve link: ${err}`)
+          return
+        }
+      })
+    }
+
+    initAndFetch()
+  }, [])
 
   useEffect(() => {
     if (locationEnabled && userLocation) {
@@ -96,8 +113,10 @@ export default function JoinPage() {
     redirectToDownload();
   };
 
-  function redirectToDownload() {
-    branch.link({}, function (err, link) {
+  async function redirectToDownload() {
+    const BranchSDK = (await import('branch-sdk')).default
+
+    BranchSDK.link({}, function (err, link) {
       if (!err && link) {
         router.push(link);
       }
