@@ -556,6 +556,49 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
+      confessions_range_feed: {
+        Args: {
+          user_lat: number
+          user_lng: number
+          range_km: number
+          input_user_id?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          is_pinned: boolean
+          is_admin_note: boolean
+          reply_count: number
+          sort_order: number
+          score: number
+          gender: Database["public"]["Enums"]["gender_type"]
+        }[]
+      }
+      confessions_range_feed_newest: {
+        Args: {
+          user_lat: number
+          user_lng: number
+          range_km: number
+          input_user_id?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          is_pinned: boolean
+          is_admin_note: boolean
+          reply_count: number
+          sort_order: number
+          gender: Database["public"]["Enums"]["gender_type"]
+        }[]
+      }
       get_posts_by_distance: {
         Args: {
           input_lat: number

@@ -5,20 +5,14 @@ import { LocationPrompt } from "@/components/LocationPrompt";
 import { ConfessionDisplay } from "@/components/Confession";
 import { getLocation, calculateDistance } from "@/utils/geolocation";
 import { Skeleton } from "@/components/ui/skeleton";
-
-interface Post {
-  id: string;
-  content: string;
-  lat: number;
-  lng: number;
-  gender: "male" | "female" | "other";
-}
+import branch from 'branch-sdk';
+import type { Tables } from "../../../types_db";
 
 export default function JoinPage() {
   const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] =
     useState<GeolocationCoordinates | null>(null);
-  const [confession, setConfession] = useState<Post | null>(null);
+  const [confession, setConfession] = useState<Tables<"posts_public"> | null>(null);
   const [distance, setDistance] = useState<number | null>(null);
   const [nearbyCount, setNearbyCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +21,7 @@ export default function JoinPage() {
     if (locationEnabled && userLocation) {
       setIsLoading(true);
       Promise.all([
-        fetch("/api/preview-posts"),
+        fetch(`/api/preview-posts?lat=${userLocation.latitude}&lng=${userLocation.longitude}`),
         fetch(
           `/api/post-count?lat=${userLocation.latitude}&lng=${userLocation.longitude}`
         ),
@@ -38,8 +32,8 @@ export default function JoinPage() {
         .then(([postsData, countData]) => {
           if (postsData.posts && postsData.posts.length > 0) {
             const longestPost = postsData.posts.reduce(
-              (longest: Post, current: Post) =>
-                current.content.length > longest.content.length
+              (longest: Tables<"posts_public">, current: Tables<"posts_public">) =>
+                (current?.content?.length as unknown as number) > (longest.content?.length as unknown as number)
                   ? current
                   : longest,
               postsData.posts[0]
@@ -53,7 +47,13 @@ export default function JoinPage() {
                   : longestPost.content,
               lat: longestPost.lat,
               lng: longestPost.lng,
-              gender: longestPost.gender,
+              gender: longestPost.gender as "male" | "female" | "other",
+              created_at: longestPost.created_at,
+              is_admin_note: false,
+              is_pinned: false,
+              reply_count: 0,
+              sort_order: 0,
+              views: 0,
             });
 
             const dist = calculateDistance(
@@ -91,17 +91,19 @@ export default function JoinPage() {
 
   const handleDenyLocation = () => {
     setLocationEnabled(false);
-    openAppStore();
+    redirectToDownload();
   };
 
-  const openAppStore = () => {
-    // Simulate opening the App Store
-    window.location.href = "https://apps.apple.com/us/app/your-app-id";
-  };
-
+  function redirectToDownload() {
+    branch.link({}, function (err, link) {
+      if (!err && link) {
+        window.location.href = link;
+      }
+    });
+  }
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-[100dvh] bg-black text-white flex items-center justify-center p-4 pb-8 safe-area-inset">
+      <div className="w-full max-w-md px-4">
         {locationEnabled === null && (
           <LocationPrompt
             onAllow={handleAllowLocation}
@@ -115,16 +117,10 @@ export default function JoinPage() {
             confession &&
             distance !== null && (
               <ConfessionDisplay
-                confession={{
-                  id: confession.id,
-                  text: confession.content,
-                  gender: confession.gender,
-                  latitude: confession.lat,
-                  longitude: confession.lng,
-                }}
+                confession={confession}
                 distance={distance}
                 nearbyCount={nearbyCount}
-                onSeeMore={openAppStore}
+                onSeeMore={redirectToDownload}
               />
             )
           ))}

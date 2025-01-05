@@ -9,7 +9,7 @@ interface LocationPromptProps {
 export function LocationPrompt({ onAllow, onDeny }: LocationPromptProps) {
   return (
     <div className="flex flex-col items-center justify-center h-full text-center p-6">
-      <div className="mb-6 relative w-full max-w-[280px] aspect-square rounded-lg overflow-hidden">
+      <div className="mb-6 relative w-full max-w-[280px] aspect-video rounded-lg overflow-hidden">
         <Image
           src="/onboarding.png"
           alt="Map showing local confessions"
@@ -18,7 +18,7 @@ export function LocationPrompt({ onAllow, onDeny }: LocationPromptProps) {
           priority
         />
       </div>
-      <h1 className="text-4xl font-bold mb-3">Share what your neighbors are hiding 👀</h1>
+      <h1 className="text-3xl font-bold mb-3">See what your neighbors are hiding 👀</h1>
       <p className="text-sm text-muted-foreground mb-10">
         Enable location to see confessions from your area
       </p>

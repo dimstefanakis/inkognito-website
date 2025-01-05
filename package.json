@@ -14,6 +14,8 @@
     "@sentry/nextjs": "^8",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.3",
+    "@types/branch-sdk": "^2.53.7",
+    "branch-sdk": "^2.86.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "crypto": "^1.0.1",
