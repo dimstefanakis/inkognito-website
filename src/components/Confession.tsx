@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import type { Tables } from "../../types_db";
@@ -7,6 +8,7 @@ interface ConfessionProps {
   distance: number;
   nearbyCount: number;
   onSeeMore: () => void;
+  link: string;
 }
 
 function formatDistance(meters: number): string {
@@ -28,7 +30,7 @@ function getRelativeTimeShort(dateString: string): string {
   return `${Math.floor(diffInSeconds / 31536000)}y`;
 }
 
-export function ConfessionDisplay({ confession, distance, nearbyCount, onSeeMore }: ConfessionProps) {
+export function ConfessionDisplay({ confession, distance, nearbyCount, onSeeMore, link }: ConfessionProps) {
   function getNearbyCountText() {
     if (nearbyCount > 1000) {
       return '1000+';
@@ -63,12 +65,14 @@ export function ConfessionDisplay({ confession, distance, nearbyCount, onSeeMore
         <span>{getRelativeTimeShort(confession.created_at as string)}</span>
       </div>
       <div className="w-full max-w-xs">
-        <Button 
-          onClick={onSeeMore} 
-          className="w-full font-bold h-16 text-[16px]"
-        >
-          See {getNearbyCountText()} more secrets near you
-        </Button>
+        <Link href={link}>
+          <Button
+            onClick={onSeeMore}
+            className="w-full font-bold h-16 text-[16px]"
+          >
+            See {getNearbyCountText()} more secrets near you
+          </Button>
+        </Link>
       </div>
     </div>
   );

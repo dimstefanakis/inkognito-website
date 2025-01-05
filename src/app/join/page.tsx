@@ -138,6 +138,7 @@ export default function JoinPage() {
             confession &&
             distance !== null && (
               <ConfessionDisplay
+                link={branchLink as string}
                 confession={confession}
                 distance={distance}
                 nearbyCount={nearbyCount}
