@@ -6,7 +6,6 @@ import { getLocation, calculateDistance } from "@/utils/geolocation";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Tables } from "../../../types_db";
 
-const branchKey = 'key_live_gypXDlYHiBAQqz2WwSZZPbjnAEebvJZk'
 export default function JoinPage() {
   const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] =
