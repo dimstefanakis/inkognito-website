@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { LocationPrompt } from "@/components/LocationPrompt";
 import { ConfessionDisplay } from "@/components/Confession";
 import { getLocation, calculateDistance } from "@/utils/geolocation";
@@ -9,6 +10,7 @@ import branch from 'branch-sdk';
 import type { Tables } from "../../../types_db";
 
 export default function JoinPage() {
+  const router = useRouter();
   const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] =
     useState<GeolocationCoordinates | null>(null);
@@ -97,10 +99,11 @@ export default function JoinPage() {
   function redirectToDownload() {
     branch.link({}, function (err, link) {
       if (!err && link) {
-        window.location.href = link;
+        router.push(link);
       }
     });
   }
+
   return (
     <div className="min-h-[100dvh] bg-black text-white flex items-center justify-center p-4 pb-8 safe-area-inset">
       <div className="w-full max-w-md px-4">
