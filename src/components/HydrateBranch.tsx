@@ -14,7 +14,7 @@ export function HydrateBranch() {
 
   return (
     <Script
-      src="https://cdn.branch.io/branch-latest.min.js"
+      src="/branch-sdk.js"
       strategy="beforeInteractive"
       onLoad={() => {
         if (window.branch) {
