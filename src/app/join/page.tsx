@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { LocationPrompt } from "@/components/LocationPrompt";
 import { ConfessionDisplay } from "@/components/Confession";
 import { getLocation, calculateDistance } from "@/utils/geolocation";
@@ -10,7 +9,6 @@ import type { Tables } from "../../../types_db";
 const branchKey = 'key_live_gypXDlYHiBAQqz2WwSZZPbjnAEebvJZk'
 
 export default function JoinPage() {
-  const router = useRouter();
   const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] =
     useState<GeolocationCoordinates | null>(null);
