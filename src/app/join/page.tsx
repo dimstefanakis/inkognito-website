@@ -20,7 +20,7 @@ export default function JoinPage() {
   useEffect(() => {
     async function initAndFetch() {
       if (window.branch) {
-        window.branch.init(branchKey)
+        // window.branch.init(branchKey)
         window.branch.link({}, function (err, link) {
           console.log(link, err)
           if (!err && link) {
