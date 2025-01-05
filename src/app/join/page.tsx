@@ -118,7 +118,7 @@ export default function JoinPage() {
 
     BranchSDK.link({}, function (err, link) {
       if (!err && link) {
-        router.push(link);
+        window.location.href = link;
       }
     });
   }
