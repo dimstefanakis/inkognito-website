@@ -25,7 +25,7 @@ export default function JoinPage() {
 
       BranchSDK.init(branchKey)
 
-      BranchSDK.data(function (err, data) {
+      BranchSDK.data(function (err) {
         if (err) {
           console.warn(`Branch failed to resolve link: ${err}`)
           return
