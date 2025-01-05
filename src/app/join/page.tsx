@@ -7,7 +7,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Tables } from "../../../types_db";
 
 const branchKey = 'key_live_gypXDlYHiBAQqz2WwSZZPbjnAEebvJZk'
-
 export default function JoinPage() {
   const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] =
@@ -17,23 +16,18 @@ export default function JoinPage() {
   const [nearbyCount, setNearbyCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [branchLink, setBranchLink] = useState<string | null>(null);
+
   useEffect(() => {
     async function initAndFetch() {
-      const BranchSDK = (await import('branch-sdk')).default
-
-      BranchSDK.init(branchKey)
-      BranchSDK.link({}, function (err, link) {
-        if (!err && link) {
-          setBranchLink(link);
-        }
-      });
-
-      BranchSDK.data(function (err) {
-        if (err) {
-          console.warn(`Branch failed to resolve link: ${err}`)
-          return
-        }
-      })
+      if (window.branch) {
+        window.branch.init(branchKey)
+        window.branch.link({}, function (err, link) {
+          console.log(link, err)
+          if (!err && link) {
+            setBranchLink(link);
+          }
+        });
+      }
     }
 
     initAndFetch()

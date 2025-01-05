@@ -1,15 +1,26 @@
 'use client';
 
 import { useEffect } from 'react';
-
-import branch from 'branch-sdk';
+import Script from 'next/script';
 
 const branchKey = 'key_live_gypXDlYHiBAQqz2WwSZZPbjnAEebvJZk'
 
 export function HydrateBranch() {
   useEffect(() => {
-    branch.init(branchKey);
+    if (typeof window !== "undefined") {
+      window.branch = window.branch || {};
+    }
   }, []);
 
-  return null;
+  return (
+    <Script
+      src="https://cdn.branch.io/branch-latest.min.js"
+      strategy="beforeInteractive"
+      onLoad={() => {
+        if (window.branch) {
+          window.branch.init(branchKey);
+        }
+      }}
+    />
+  )
 }

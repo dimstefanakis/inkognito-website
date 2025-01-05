@@ -65,7 +65,7 @@ export function ConfessionDisplay({ confession, distance, nearbyCount, onSeeMore
         <span>{getRelativeTimeShort(confession.created_at as string)}</span>
       </div>
       <div className="w-full max-w-xs">
-        <Link href={link}>
+        <Link href={link || ''}>
           <Button
             onClick={onSeeMore}
             className="w-full font-bold h-16 text-[16px]"
