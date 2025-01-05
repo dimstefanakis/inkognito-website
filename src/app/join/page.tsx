@@ -16,12 +16,17 @@ export default function JoinPage() {
   const [distance, setDistance] = useState<number | null>(null);
   const [nearbyCount, setNearbyCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [branchLink, setBranchLink] = useState<string | null>(null);
   useEffect(() => {
     async function initAndFetch() {
       const BranchSDK = (await import('branch-sdk')).default
 
       BranchSDK.init(branchKey)
+      BranchSDK.link({}, function (err, link) {
+        if (!err && link) {
+          setBranchLink(link);
+        }
+      });
 
       BranchSDK.data(function (err) {
         if (err) {
@@ -111,14 +116,10 @@ export default function JoinPage() {
     redirectToDownload();
   };
 
-  async function redirectToDownload() {
-    const BranchSDK = (await import('branch-sdk')).default
-
-    BranchSDK.link({}, function (err, link) {
-      if (!err && link) {
-        window.location.href = link;
-      }
-    });
+  function redirectToDownload() {
+    if (branchLink) {
+      window.location.href = branchLink;
+    }
   }
 
   return (
