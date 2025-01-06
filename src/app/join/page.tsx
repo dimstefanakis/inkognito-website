@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { Tables } from "../../../types_db";
 
 export default function JoinPage() {
+  const link = 'https://inkognito.app.link/?~channel=share&~feature=waitlist_skip'
   const [locationEnabled, setLocationEnabled] = useState<boolean | null>(null);
   const [userLocation, setUserLocation] =
     useState<GeolocationCoordinates | null>(null);
@@ -14,23 +15,6 @@ export default function JoinPage() {
   const [distance, setDistance] = useState<number | null>(null);
   const [nearbyCount, setNearbyCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [branchLink, setBranchLink] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function initAndFetch() {
-      if (window.branch) {
-        // window.branch.init(branchKey)
-        window.branch.link({}, function (err, link) {
-          console.log(link, err)
-          if (!err && link) {
-            setBranchLink(link);
-          }
-        });
-      }
-    }
-
-    initAndFetch()
-  }, [])
 
   useEffect(() => {
     if (locationEnabled && userLocation) {
@@ -110,9 +94,7 @@ export default function JoinPage() {
   };
 
   function redirectToDownload() {
-    if (branchLink) {
-      window.location.href = branchLink;
-    }
+    window.location.href = 'https://inkognito.app/download';
   }
 
   return (
@@ -131,7 +113,7 @@ export default function JoinPage() {
             confession &&
             distance !== null && (
               <ConfessionDisplay
-                link={branchLink as string}
+                link={link}
                 confession={confession}
                 distance={distance}
                 nearbyCount={nearbyCount}
