@@ -94,7 +94,7 @@ export default function JoinPage() {
   };
 
   function redirectToDownload() {
-    window.location.href = 'https://inkognito.app/download';
+    window.location.href = link;
   }
 
   return (
