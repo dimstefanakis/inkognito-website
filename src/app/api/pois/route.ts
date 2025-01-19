@@ -84,7 +84,6 @@ async function fetchGooglePlaces(
   );
 
   const data = await response.json();
-  console.log(data);
   return (data.places || []).map((place: any) => ({
     place_id: place.id,
     name: place.displayName?.text || "",
@@ -312,7 +311,7 @@ function mapGooglePlaceToCategory(types: string[]): string {
 async function savePOIs(places: PlaceResult[], lat: number, lng: number) {
   const supabase = await createClient();
   let pois = [] as Tables<"pois">[];
-  const { data: existingPOIs } = await supabase
+  await supabase
     .from("pois")
     .select("google_place_id");
 
@@ -344,7 +343,7 @@ async function savePOIs(places: PlaceResult[], lat: number, lng: number) {
   pois = upsertedPOIs || [];
 
   // Record the fetch history
-  const { data: poiFetchHistory, error: poiFetchHistoryError } = await supabase
+  const { error: poiFetchHistoryError } = await supabase
     .from("poi_fetch_history")
     .insert({
       lat: lat,
