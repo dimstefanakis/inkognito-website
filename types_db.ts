@@ -142,10 +142,104 @@ export type Database = {
           },
         ]
       }
+      poi_fetch_history: {
+        Row: {
+          fetched_at: string | null
+          geom: unknown | null
+          id: string
+          lat: number
+          lng: number
+          radius: number
+          source: string
+        }
+        Insert: {
+          fetched_at?: string | null
+          geom?: unknown | null
+          id?: string
+          lat: number
+          lng: number
+          radius: number
+          source: string
+        }
+        Update: {
+          fetched_at?: string | null
+          geom?: unknown | null
+          id?: string
+          lat?: number
+          lng?: number
+          radius?: number
+          source?: string
+        }
+        Relationships: []
+      }
+      pois: {
+        Row: {
+          address: Json | null
+          category: string | null
+          created_at: string | null
+          geom: unknown | null
+          google_place_id: string | null
+          icon_background_color: string | null
+          icon_mask_base_uri: string | null
+          id: string
+          lat: number
+          lng: number
+          logo_url: string | null
+          name: string
+          photos: Json | null
+          primary_type: string | null
+          primary_type_display_name: string | null
+          saved_images: string[] | null
+          types: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          address?: Json | null
+          category?: string | null
+          created_at?: string | null
+          geom?: unknown | null
+          google_place_id?: string | null
+          icon_background_color?: string | null
+          icon_mask_base_uri?: string | null
+          id?: string
+          lat: number
+          lng: number
+          logo_url?: string | null
+          name: string
+          photos?: Json | null
+          primary_type?: string | null
+          primary_type_display_name?: string | null
+          saved_images?: string[] | null
+          types?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          address?: Json | null
+          category?: string | null
+          created_at?: string | null
+          geom?: unknown | null
+          google_place_id?: string | null
+          icon_background_color?: string | null
+          icon_mask_base_uri?: string | null
+          id?: string
+          lat?: number
+          lng?: number
+          logo_url?: string | null
+          name?: string
+          photos?: Json | null
+          primary_type?: string | null
+          primary_type_display_name?: string | null
+          saved_images?: string[] | null
+          types?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           content: string | null
           created_at: string
+          geom: unknown | null
           hidden: boolean | null
           hidden_reason: string | null
           id: string
@@ -156,6 +250,8 @@ export type Database = {
           lng: number | null
           moderated_at: string | null
           moderation_score: number | null
+          poi_id: string | null
+          posted_from_poi: boolean | null
           requires_review: boolean | null
           user_id: string | null
           views: number | null
@@ -163,6 +259,7 @@ export type Database = {
         Insert: {
           content?: string | null
           created_at?: string
+          geom?: unknown | null
           hidden?: boolean | null
           hidden_reason?: string | null
           id?: string
@@ -173,6 +270,8 @@ export type Database = {
           lng?: number | null
           moderated_at?: string | null
           moderation_score?: number | null
+          poi_id?: string | null
+          posted_from_poi?: boolean | null
           requires_review?: boolean | null
           user_id?: string | null
           views?: number | null
@@ -180,6 +279,7 @@ export type Database = {
         Update: {
           content?: string | null
           created_at?: string
+          geom?: unknown | null
           hidden?: boolean | null
           hidden_reason?: string | null
           id?: string
@@ -190,11 +290,20 @@ export type Database = {
           lng?: number | null
           moderated_at?: string | null
           moderation_score?: number | null
+          poi_id?: string | null
+          posted_from_poi?: boolean | null
           requires_review?: boolean | null
           user_id?: string | null
           views?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "posts_poi_id_fkey"
+            columns: ["poi_id"]
+            isOneToOne: false
+            referencedRelation: "pois"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "posts_user_id_fkey"
             columns: ["user_id"]
@@ -535,6 +644,15 @@ export type Database = {
         }
         Returns: number
       }
+      check_poi_fetch_needed: {
+        Args: {
+          check_lat: number
+          check_lng: number
+          check_radius?: number
+          max_age_days?: number
+        }
+        Returns: boolean
+      }
       confessions_personalized_feed: {
         Args: {
           user_lat: number
@@ -595,8 +713,42 @@ export type Database = {
           is_pinned: boolean
           is_admin_note: boolean
           reply_count: number
-          sort_order: number
           gender: Database["public"]["Enums"]["gender_type"]
+        }[]
+      }
+      get_poi_stories: {
+        Args: {
+          user_lat: number
+          user_lng: number
+        }
+        Returns: {
+          poi_id: string
+          poi_name: string
+          poi_logo_url: string
+          poi_icon_mask_base_uri: string
+          poi_icon_background_color: string
+          poi_lat: number
+          poi_lng: number
+          poi_photos: Json
+          distance_km: number
+          stories: Json
+        }[]
+      }
+      get_pois_in_radius: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          radius_meters?: number
+        }
+        Returns: {
+          id: string
+          name: string
+          category: string
+          lat: number
+          lng: number
+          logo_url: string
+          address: Json
+          distance_meters: number
         }[]
       }
       get_posts_by_distance: {
