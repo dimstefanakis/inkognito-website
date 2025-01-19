@@ -34,11 +34,11 @@ function validateContent(text: string): { isValid: boolean; error?: string } {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
-    const { content, lat, lng, user_id } = await request.json()
+    const { content, lat, lng, user_id, poi_id } = await request.json()
 
     if (!content || !lat || !lng) {
       return Response.json(
-        { error: 'content, lat, and lng are required' },
+        { error: 'All fields are required' },
         { status: 400 }
       )
     }
@@ -59,19 +59,21 @@ export async function POST(request: NextRequest) {
         lat,
         lng,
         user_id,
+        poi_id,
+        posted_from_poi: poi_id ? true : false,
       })
       .select()
       .single()
 
     if (error) {
-      return Response.json({ error: error.message }, { status: 500 })
+      return Response.json({ error: 'Failed to create post' }, { status: 500 })
     }
 
     return Response.json(data, { status: 201 })
   } catch (error) {
     console.log(error)
     return Response.json(
-      { error: 'Invalid request body' },
+      { error: 'Failed to create post' },
       { status: 400 }
     )
   }
