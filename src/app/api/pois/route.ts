@@ -339,7 +339,7 @@ async function savePOIs(places: PlaceResult[], lat: number, lng: number) {
     primary_type_display_name: place.primary_type_display_name,
     lat: place.geometry.location.lat,
     lng: place.geometry.location.lng,
-    geom: `SRID=4326;POINT(${place.geometry.location.lng} ${place.geometry.location.lat})`,
+    geom: `POINT(${place.geometry.location.lng} ${place.geometry.location.lat})`,
     updated_at: new Date().toISOString(),
   }));
 
@@ -362,7 +362,7 @@ async function savePOIs(places: PlaceResult[], lat: number, lng: number) {
       lng: lng,
       radius: FETCH_RADIUS,
       source: "google_places",
-      geom: `SRID=4326;POINT(${lng} ${lat})`,
+      geom: `POINT(${lng} ${lat})`,
     });
 
   if (poiFetchHistoryError) throw poiFetchHistoryError;
