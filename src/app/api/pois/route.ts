@@ -25,6 +25,18 @@ interface PlaceResult {
   };
 }
 
+interface GooglePlace {
+  id: string;
+  displayName: { text: string };
+  primaryTypeDisplayName: { text: string };
+  iconMaskBaseUri: string;
+  iconBackgroundColor: string;
+  types: string[];
+  primaryType: string;
+  photos: string[];
+  location: { latitude: number; longitude: number };
+}
+
 async function shouldFetchPOIs(lat: number, lng: number): Promise<boolean> {
   const supabase = await createClient();
   try {
@@ -84,7 +96,7 @@ async function fetchGooglePlaces(
   );
 
   const data = await response.json();
-  return (data.places || []).map((place: any) => ({
+  return (data.places || []).map((place: GooglePlace) => ({
     place_id: place.id,
     name: place.displayName?.text || "",
     primary_type_display_name: place.primaryTypeDisplayName?.text || "",

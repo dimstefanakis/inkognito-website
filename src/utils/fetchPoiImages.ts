@@ -104,7 +104,10 @@ async function getMapillaryImages(lat: number, lon: number): Promise<ImageSource
 // Update the POI import function
 export async function updatePOIWithImages(
   poiId: string,
-  osmTags: any,
+  osmTags: {
+    name: string;
+    wikipedia: string;
+  },
   lat: number,
   lon: number
 ): Promise<void> {
