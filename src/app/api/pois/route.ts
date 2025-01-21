@@ -100,7 +100,7 @@ async function fetchGooglePlaces(
     place_id: place.id,
     name: place.displayName?.text || "",
     primary_type_display_name: place.primaryTypeDisplayName?.text || "",
-    icon_mask_base_uri: place.iconMaskBaseUri ? `${place.iconMaskBaseUri}.svg` : "",
+    icon_mask_base_uri: place.iconMaskBaseUri,
     icon_background_color: place.iconBackgroundColor || "",
     types: place.types || [],
     primary_type: place.primaryType,
