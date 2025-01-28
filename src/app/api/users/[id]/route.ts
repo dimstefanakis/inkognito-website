@@ -29,12 +29,13 @@ export async function GET(
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient()
   const { id } = await params;
-  const { gender } = await request.json();
+  const { gender, version } = await request.json();
 
   const { data, error } = await supabase
     .from("users")
     .update({
       gender: gender,
+      version: version || '',
     })
     .eq("id", id)
 
