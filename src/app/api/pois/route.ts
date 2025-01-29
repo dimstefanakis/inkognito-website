@@ -402,6 +402,5 @@ export async function GET(request: NextRequest) {
   // // get them again with another format
   // const existingPOIs = await getExistingPOIs(Number(lat), Number(lng));
 
-  // @ts-expect-error
-  return NextResponse.json({ data: existingPOIs });
+  // return NextResponse.json({ data: existingPOIs });
 }
