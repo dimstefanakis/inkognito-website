@@ -55,6 +55,7 @@ async function shouldFetchPOIs(lat: number, lng: number): Promise<boolean> {
   }
 }
 
+
 async function fetchGooglePlaces(
   lat: number,
   lng: number
@@ -401,6 +402,6 @@ export async function GET(request: NextRequest) {
   // // get them again with another format
   // const existingPOIs = await getExistingPOIs(Number(lat), Number(lng));
 
-  // @ts-ignore
+  // @ts-expect-error
   return NextResponse.json({ data: existingPOIs });
 }
