@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 const GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY!;
 const FETCH_RADIUS = 100;
-const MAX_AGE_DAYS = 30;
+const MAX_AGE_DAYS = 60;
 
 interface PlaceResult {
   place_id: string;
@@ -392,12 +392,15 @@ export async function GET(request: NextRequest) {
   if (!shouldFetch) {
     const existingPOIs = await getExistingPOIs(Number(lat), Number(lng));
     return NextResponse.json({ data: existingPOIs });
+  } else {
+    return NextResponse.json({ data: [] });
   }
 
-  const places = await fetchGooglePlaces(Number(lat), Number(lng));
-  await savePOIs(places, Number(lat), Number(lng));
-  // get them again with another format
-  const existingPOIs = await getExistingPOIs(Number(lat), Number(lng));
+  // const places = await fetchGooglePlaces(Number(lat), Number(lng));
+  // await savePOIs(places, Number(lat), Number(lng));
+  // // get them again with another format
+  // const existingPOIs = await getExistingPOIs(Number(lat), Number(lng));
 
+  // @ts-ignore
   return NextResponse.json({ data: existingPOIs });
 }
