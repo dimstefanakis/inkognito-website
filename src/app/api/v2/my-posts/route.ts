@@ -16,6 +16,11 @@ type MyPost = Omit<
   reply_count: number;
   gender: string | null;
 };
+
+type ReplyWithUser = Omit<Tables<"replies_v2">, "upvotes"> & {
+  user_id: Tables<"users_v2"> | null;
+};
+
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const authHeader = request.headers.get("authorization");
@@ -96,7 +101,8 @@ export async function GET(request: NextRequest) {
       .select("user_id(*), id, created_at, content, post_id, is_author, thread_id")
       .eq("post_id", post.id)
       .order("created_at", { ascending: false })
-      .limit(4);
+      .limit(4)
+      .returns<ReplyWithUser[]>();
 
     const { data: totalReplies, error: totalRepliesError } = await supabase
       .rpc("get_replies_v2_count", { input_post_id: post.id });
@@ -110,7 +116,7 @@ export async function GET(request: NextRequest) {
         post_id: reply.post_id,
         thread_id: reply.thread_id,
         is_author: reply.is_author,
-        gender: reply.user_id?.gender as string,
+        gender: reply.user_id?.gender || null,
       })) : [],
       reply_count: totalReplies || 0,
     });
