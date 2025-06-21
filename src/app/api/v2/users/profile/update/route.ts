@@ -22,9 +22,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { branch_params, expo_push_token, lat, lng } = await request.json();
+  const { branch_params, expo_push_token, lat, lng, gender } = await request.json();
 
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, string> = {};
 
   if (branch_params !== null && branch_params !== undefined && Object.keys(branch_params).length > 0) {
     updateData.branch_data = JSON.stringify(branch_params);
@@ -37,6 +37,10 @@ export async function POST(request: NextRequest) {
   if (lat !== null && lat !== undefined && lng !== null && lng !== undefined) {
     updateData.lat = lat;
     updateData.lng = lng;
+  }
+
+  if (gender !== null && gender !== undefined && gender.trim() !== "") {
+    updateData.gender = gender;
   }
 
   if (Object.keys(updateData).length === 0) {
@@ -55,5 +59,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json({ data });
+  return NextResponse.json({ data: data });
 }

@@ -28,7 +28,8 @@ export async function GET(request: NextRequest) {
   const { data, error } = await supabase
     .from("users_v2")
     .select("*")
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .single();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

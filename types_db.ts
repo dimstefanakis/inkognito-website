@@ -115,6 +115,570 @@ export type Database = {
         }
         Relationships: []
       }
+      countries: {
+        Row: {
+          area_km2: number | null
+          bounding_box: unknown | null
+          continent: string | null
+          created_at: string
+          geometry: unknown
+          id: string
+          is_active: boolean | null
+          iso_code_2: string
+          iso_code_3: string
+          name: string
+          population: number | null
+          region: string | null
+        }
+        Insert: {
+          area_km2?: number | null
+          bounding_box?: unknown | null
+          continent?: string | null
+          created_at?: string
+          geometry: unknown
+          id?: string
+          is_active?: boolean | null
+          iso_code_2: string
+          iso_code_3: string
+          name: string
+          population?: number | null
+          region?: string | null
+        }
+        Update: {
+          area_km2?: number | null
+          bounding_box?: unknown | null
+          continent?: string | null
+          created_at?: string
+          geometry?: unknown
+          id?: string
+          is_active?: boolean | null
+          iso_code_2?: string
+          iso_code_3?: string
+          name?: string
+          population?: number | null
+          region?: string | null
+        }
+        Relationships: []
+      }
+      countries_temp: {
+        Row: {
+          abbrev: string | null
+          abbrev_len: number | null
+          adm0_a3: string | null
+          adm0_a3_ar: string | null
+          adm0_a3_bd: string | null
+          adm0_a3_br: string | null
+          adm0_a3_cn: string | null
+          adm0_a3_de: string | null
+          adm0_a3_eg: string | null
+          adm0_a3_es: string | null
+          adm0_a3_fr: string | null
+          adm0_a3_gb: string | null
+          adm0_a3_gr: string | null
+          adm0_a3_id: string | null
+          adm0_a3_il: string | null
+          adm0_a3_in: string | null
+          adm0_a3_it: string | null
+          adm0_a3_jp: string | null
+          adm0_a3_ko: string | null
+          adm0_a3_ma: string | null
+          adm0_a3_nl: string | null
+          adm0_a3_np: string | null
+          adm0_a3_pk: string | null
+          adm0_a3_pl: string | null
+          adm0_a3_ps: string | null
+          adm0_a3_pt: string | null
+          adm0_a3_ru: string | null
+          adm0_a3_sa: string | null
+          adm0_a3_se: string | null
+          adm0_a3_tr: string | null
+          adm0_a3_tw: string | null
+          adm0_a3_ua: string | null
+          adm0_a3_un: number | null
+          adm0_a3_us: string | null
+          adm0_a3_vn: string | null
+          adm0_a3_wb: number | null
+          adm0_dif: number | null
+          adm0_diff: string | null
+          adm0_iso: string | null
+          adm0_tlc: string | null
+          admin: string | null
+          brk_a3: string | null
+          brk_diff: number | null
+          brk_group: string | null
+          brk_name: string | null
+          continent: string | null
+          economy: string | null
+          fclass_ar: string | null
+          fclass_bd: string | null
+          fclass_br: string | null
+          fclass_cn: string | null
+          fclass_de: string | null
+          fclass_eg: string | null
+          fclass_es: string | null
+          fclass_fr: string | null
+          fclass_gb: string | null
+          fclass_gr: string | null
+          fclass_id: string | null
+          fclass_il: string | null
+          fclass_in: string | null
+          fclass_iso: string | null
+          fclass_it: string | null
+          fclass_jp: string | null
+          fclass_ko: string | null
+          fclass_ma: string | null
+          fclass_nl: string | null
+          fclass_np: string | null
+          fclass_pk: string | null
+          fclass_pl: string | null
+          fclass_ps: string | null
+          fclass_pt: string | null
+          fclass_ru: string | null
+          fclass_sa: string | null
+          fclass_se: string | null
+          fclass_tlc: string | null
+          fclass_tr: string | null
+          fclass_tw: string | null
+          fclass_ua: string | null
+          fclass_us: string | null
+          fclass_vn: string | null
+          featurecla: string | null
+          fips_10: string | null
+          formal_en: string | null
+          formal_fr: string | null
+          gdp_md: number | null
+          gdp_year: number | null
+          geom: unknown | null
+          geou_dif: number | null
+          geounit: string | null
+          gid: number
+          gu_a3: string | null
+          homepart: number | null
+          income_grp: string | null
+          iso_a2: string | null
+          iso_a2_eh: string | null
+          iso_a3: string | null
+          iso_a3_eh: string | null
+          iso_n3: string | null
+          iso_n3_eh: string | null
+          label_x: number | null
+          label_y: number | null
+          labelrank: number | null
+          level: number | null
+          long_len: number | null
+          mapcolor13: number | null
+          mapcolor7: number | null
+          mapcolor8: number | null
+          mapcolor9: number | null
+          max_label: number | null
+          min_label: number | null
+          min_zoom: number | null
+          name: string | null
+          name_alt: string | null
+          name_ar: string | null
+          name_bn: string | null
+          name_ciawf: string | null
+          name_de: string | null
+          name_el: string | null
+          name_en: string | null
+          name_es: string | null
+          name_fa: string | null
+          name_fr: string | null
+          name_he: string | null
+          name_hi: string | null
+          name_hu: string | null
+          name_id: string | null
+          name_it: string | null
+          name_ja: string | null
+          name_ko: string | null
+          name_len: number | null
+          name_long: string | null
+          name_nl: string | null
+          name_pl: string | null
+          name_pt: string | null
+          name_ru: string | null
+          name_sort: string | null
+          name_sv: string | null
+          name_tr: string | null
+          name_uk: string | null
+          name_ur: string | null
+          name_vi: string | null
+          name_zh: string | null
+          name_zht: string | null
+          ne_id: number | null
+          note_adm0: string | null
+          note_brk: string | null
+          pop_est: number | null
+          pop_rank: number | null
+          pop_year: number | null
+          postal: string | null
+          region_un: string | null
+          region_wb: string | null
+          scalerank: number | null
+          sov_a3: string | null
+          sovereignt: string | null
+          su_a3: string | null
+          su_dif: number | null
+          subregion: string | null
+          subunit: string | null
+          tiny: number | null
+          tlc: string | null
+          tlc_diff: string | null
+          type: string | null
+          un_a3: string | null
+          wb_a2: string | null
+          wb_a3: string | null
+          wikidataid: string | null
+          woe_id: number | null
+          woe_id_eh: number | null
+          woe_note: string | null
+        }
+        Insert: {
+          abbrev?: string | null
+          abbrev_len?: number | null
+          adm0_a3?: string | null
+          adm0_a3_ar?: string | null
+          adm0_a3_bd?: string | null
+          adm0_a3_br?: string | null
+          adm0_a3_cn?: string | null
+          adm0_a3_de?: string | null
+          adm0_a3_eg?: string | null
+          adm0_a3_es?: string | null
+          adm0_a3_fr?: string | null
+          adm0_a3_gb?: string | null
+          adm0_a3_gr?: string | null
+          adm0_a3_id?: string | null
+          adm0_a3_il?: string | null
+          adm0_a3_in?: string | null
+          adm0_a3_it?: string | null
+          adm0_a3_jp?: string | null
+          adm0_a3_ko?: string | null
+          adm0_a3_ma?: string | null
+          adm0_a3_nl?: string | null
+          adm0_a3_np?: string | null
+          adm0_a3_pk?: string | null
+          adm0_a3_pl?: string | null
+          adm0_a3_ps?: string | null
+          adm0_a3_pt?: string | null
+          adm0_a3_ru?: string | null
+          adm0_a3_sa?: string | null
+          adm0_a3_se?: string | null
+          adm0_a3_tr?: string | null
+          adm0_a3_tw?: string | null
+          adm0_a3_ua?: string | null
+          adm0_a3_un?: number | null
+          adm0_a3_us?: string | null
+          adm0_a3_vn?: string | null
+          adm0_a3_wb?: number | null
+          adm0_dif?: number | null
+          adm0_diff?: string | null
+          adm0_iso?: string | null
+          adm0_tlc?: string | null
+          admin?: string | null
+          brk_a3?: string | null
+          brk_diff?: number | null
+          brk_group?: string | null
+          brk_name?: string | null
+          continent?: string | null
+          economy?: string | null
+          fclass_ar?: string | null
+          fclass_bd?: string | null
+          fclass_br?: string | null
+          fclass_cn?: string | null
+          fclass_de?: string | null
+          fclass_eg?: string | null
+          fclass_es?: string | null
+          fclass_fr?: string | null
+          fclass_gb?: string | null
+          fclass_gr?: string | null
+          fclass_id?: string | null
+          fclass_il?: string | null
+          fclass_in?: string | null
+          fclass_iso?: string | null
+          fclass_it?: string | null
+          fclass_jp?: string | null
+          fclass_ko?: string | null
+          fclass_ma?: string | null
+          fclass_nl?: string | null
+          fclass_np?: string | null
+          fclass_pk?: string | null
+          fclass_pl?: string | null
+          fclass_ps?: string | null
+          fclass_pt?: string | null
+          fclass_ru?: string | null
+          fclass_sa?: string | null
+          fclass_se?: string | null
+          fclass_tlc?: string | null
+          fclass_tr?: string | null
+          fclass_tw?: string | null
+          fclass_ua?: string | null
+          fclass_us?: string | null
+          fclass_vn?: string | null
+          featurecla?: string | null
+          fips_10?: string | null
+          formal_en?: string | null
+          formal_fr?: string | null
+          gdp_md?: number | null
+          gdp_year?: number | null
+          geom?: unknown | null
+          geou_dif?: number | null
+          geounit?: string | null
+          gid?: number
+          gu_a3?: string | null
+          homepart?: number | null
+          income_grp?: string | null
+          iso_a2?: string | null
+          iso_a2_eh?: string | null
+          iso_a3?: string | null
+          iso_a3_eh?: string | null
+          iso_n3?: string | null
+          iso_n3_eh?: string | null
+          label_x?: number | null
+          label_y?: number | null
+          labelrank?: number | null
+          level?: number | null
+          long_len?: number | null
+          mapcolor13?: number | null
+          mapcolor7?: number | null
+          mapcolor8?: number | null
+          mapcolor9?: number | null
+          max_label?: number | null
+          min_label?: number | null
+          min_zoom?: number | null
+          name?: string | null
+          name_alt?: string | null
+          name_ar?: string | null
+          name_bn?: string | null
+          name_ciawf?: string | null
+          name_de?: string | null
+          name_el?: string | null
+          name_en?: string | null
+          name_es?: string | null
+          name_fa?: string | null
+          name_fr?: string | null
+          name_he?: string | null
+          name_hi?: string | null
+          name_hu?: string | null
+          name_id?: string | null
+          name_it?: string | null
+          name_ja?: string | null
+          name_ko?: string | null
+          name_len?: number | null
+          name_long?: string | null
+          name_nl?: string | null
+          name_pl?: string | null
+          name_pt?: string | null
+          name_ru?: string | null
+          name_sort?: string | null
+          name_sv?: string | null
+          name_tr?: string | null
+          name_uk?: string | null
+          name_ur?: string | null
+          name_vi?: string | null
+          name_zh?: string | null
+          name_zht?: string | null
+          ne_id?: number | null
+          note_adm0?: string | null
+          note_brk?: string | null
+          pop_est?: number | null
+          pop_rank?: number | null
+          pop_year?: number | null
+          postal?: string | null
+          region_un?: string | null
+          region_wb?: string | null
+          scalerank?: number | null
+          sov_a3?: string | null
+          sovereignt?: string | null
+          su_a3?: string | null
+          su_dif?: number | null
+          subregion?: string | null
+          subunit?: string | null
+          tiny?: number | null
+          tlc?: string | null
+          tlc_diff?: string | null
+          type?: string | null
+          un_a3?: string | null
+          wb_a2?: string | null
+          wb_a3?: string | null
+          wikidataid?: string | null
+          woe_id?: number | null
+          woe_id_eh?: number | null
+          woe_note?: string | null
+        }
+        Update: {
+          abbrev?: string | null
+          abbrev_len?: number | null
+          adm0_a3?: string | null
+          adm0_a3_ar?: string | null
+          adm0_a3_bd?: string | null
+          adm0_a3_br?: string | null
+          adm0_a3_cn?: string | null
+          adm0_a3_de?: string | null
+          adm0_a3_eg?: string | null
+          adm0_a3_es?: string | null
+          adm0_a3_fr?: string | null
+          adm0_a3_gb?: string | null
+          adm0_a3_gr?: string | null
+          adm0_a3_id?: string | null
+          adm0_a3_il?: string | null
+          adm0_a3_in?: string | null
+          adm0_a3_it?: string | null
+          adm0_a3_jp?: string | null
+          adm0_a3_ko?: string | null
+          adm0_a3_ma?: string | null
+          adm0_a3_nl?: string | null
+          adm0_a3_np?: string | null
+          adm0_a3_pk?: string | null
+          adm0_a3_pl?: string | null
+          adm0_a3_ps?: string | null
+          adm0_a3_pt?: string | null
+          adm0_a3_ru?: string | null
+          adm0_a3_sa?: string | null
+          adm0_a3_se?: string | null
+          adm0_a3_tr?: string | null
+          adm0_a3_tw?: string | null
+          adm0_a3_ua?: string | null
+          adm0_a3_un?: number | null
+          adm0_a3_us?: string | null
+          adm0_a3_vn?: string | null
+          adm0_a3_wb?: number | null
+          adm0_dif?: number | null
+          adm0_diff?: string | null
+          adm0_iso?: string | null
+          adm0_tlc?: string | null
+          admin?: string | null
+          brk_a3?: string | null
+          brk_diff?: number | null
+          brk_group?: string | null
+          brk_name?: string | null
+          continent?: string | null
+          economy?: string | null
+          fclass_ar?: string | null
+          fclass_bd?: string | null
+          fclass_br?: string | null
+          fclass_cn?: string | null
+          fclass_de?: string | null
+          fclass_eg?: string | null
+          fclass_es?: string | null
+          fclass_fr?: string | null
+          fclass_gb?: string | null
+          fclass_gr?: string | null
+          fclass_id?: string | null
+          fclass_il?: string | null
+          fclass_in?: string | null
+          fclass_iso?: string | null
+          fclass_it?: string | null
+          fclass_jp?: string | null
+          fclass_ko?: string | null
+          fclass_ma?: string | null
+          fclass_nl?: string | null
+          fclass_np?: string | null
+          fclass_pk?: string | null
+          fclass_pl?: string | null
+          fclass_ps?: string | null
+          fclass_pt?: string | null
+          fclass_ru?: string | null
+          fclass_sa?: string | null
+          fclass_se?: string | null
+          fclass_tlc?: string | null
+          fclass_tr?: string | null
+          fclass_tw?: string | null
+          fclass_ua?: string | null
+          fclass_us?: string | null
+          fclass_vn?: string | null
+          featurecla?: string | null
+          fips_10?: string | null
+          formal_en?: string | null
+          formal_fr?: string | null
+          gdp_md?: number | null
+          gdp_year?: number | null
+          geom?: unknown | null
+          geou_dif?: number | null
+          geounit?: string | null
+          gid?: number
+          gu_a3?: string | null
+          homepart?: number | null
+          income_grp?: string | null
+          iso_a2?: string | null
+          iso_a2_eh?: string | null
+          iso_a3?: string | null
+          iso_a3_eh?: string | null
+          iso_n3?: string | null
+          iso_n3_eh?: string | null
+          label_x?: number | null
+          label_y?: number | null
+          labelrank?: number | null
+          level?: number | null
+          long_len?: number | null
+          mapcolor13?: number | null
+          mapcolor7?: number | null
+          mapcolor8?: number | null
+          mapcolor9?: number | null
+          max_label?: number | null
+          min_label?: number | null
+          min_zoom?: number | null
+          name?: string | null
+          name_alt?: string | null
+          name_ar?: string | null
+          name_bn?: string | null
+          name_ciawf?: string | null
+          name_de?: string | null
+          name_el?: string | null
+          name_en?: string | null
+          name_es?: string | null
+          name_fa?: string | null
+          name_fr?: string | null
+          name_he?: string | null
+          name_hi?: string | null
+          name_hu?: string | null
+          name_id?: string | null
+          name_it?: string | null
+          name_ja?: string | null
+          name_ko?: string | null
+          name_len?: number | null
+          name_long?: string | null
+          name_nl?: string | null
+          name_pl?: string | null
+          name_pt?: string | null
+          name_ru?: string | null
+          name_sort?: string | null
+          name_sv?: string | null
+          name_tr?: string | null
+          name_uk?: string | null
+          name_ur?: string | null
+          name_vi?: string | null
+          name_zh?: string | null
+          name_zht?: string | null
+          ne_id?: number | null
+          note_adm0?: string | null
+          note_brk?: string | null
+          pop_est?: number | null
+          pop_rank?: number | null
+          pop_year?: number | null
+          postal?: string | null
+          region_un?: string | null
+          region_wb?: string | null
+          scalerank?: number | null
+          sov_a3?: string | null
+          sovereignt?: string | null
+          su_a3?: string | null
+          su_dif?: number | null
+          subregion?: string | null
+          subunit?: string | null
+          tiny?: number | null
+          tlc?: string | null
+          tlc_diff?: string | null
+          type?: string | null
+          un_a3?: string | null
+          wb_a2?: string | null
+          wb_a3?: string | null
+          wikidataid?: string | null
+          woe_id?: number | null
+          woe_id_eh?: number | null
+          woe_note?: string | null
+        }
+        Relationships: []
+      }
       moderation_logs: {
         Row: {
           action_taken: string | null
@@ -645,6 +1209,145 @@ export type Database = {
           },
         ]
       }
+      user_referrals: {
+        Row: {
+          branch_data: Json | null
+          created_at: string
+          id: string
+          install_detected: boolean | null
+          install_detected_at: string | null
+          invite_type: string
+          invitee_id: string | null
+          inviter_id: string
+          notes: string | null
+          post_id: string | null
+          referral_code: string | null
+          reward_created: boolean | null
+          reward_created_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          branch_data?: Json | null
+          created_at?: string
+          id?: string
+          install_detected?: boolean | null
+          install_detected_at?: string | null
+          invite_type?: string
+          invitee_id?: string | null
+          inviter_id: string
+          notes?: string | null
+          post_id?: string | null
+          referral_code?: string | null
+          reward_created?: boolean | null
+          reward_created_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          branch_data?: Json | null
+          created_at?: string
+          id?: string
+          install_detected?: boolean | null
+          install_detected_at?: string | null
+          invite_type?: string
+          invitee_id?: string | null
+          inviter_id?: string
+          notes?: string | null
+          post_id?: string | null
+          referral_code?: string | null
+          reward_created?: boolean | null
+          reward_created_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_referrals_invitee_id_fkey"
+            columns: ["invitee_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_referrals_inviter_id_fkey"
+            columns: ["inviter_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_referrals_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_rewards: {
+        Row: {
+          claimed_at: string | null
+          created_at: string
+          description: string | null
+          expires_at: string | null
+          id: string
+          notification_sent: boolean | null
+          notification_sent_at: string | null
+          referral_id: string | null
+          reward_data: Json | null
+          reward_status: Database["public"]["Enums"]["reward_status"]
+          reward_type: Database["public"]["Enums"]["reward_type"]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string | null
+          created_at?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          notification_sent?: boolean | null
+          notification_sent_at?: string | null
+          referral_id?: string | null
+          reward_data?: Json | null
+          reward_status?: Database["public"]["Enums"]["reward_status"]
+          reward_type: Database["public"]["Enums"]["reward_type"]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string | null
+          created_at?: string
+          description?: string | null
+          expires_at?: string | null
+          id?: string
+          notification_sent?: boolean | null
+          notification_sent_at?: string | null
+          referral_id?: string | null
+          reward_data?: Json | null
+          reward_status?: Database["public"]["Enums"]["reward_status"]
+          reward_type?: Database["public"]["Enums"]["reward_type"]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_rewards_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "user_referrals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_rewards_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_trust_scores: {
         Row: {
           created_at: string
@@ -1018,6 +1721,43 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
+      create_circle_unlock_reward: {
+        Args: {
+          inviter_user_id: string
+          invitee_user_id: string
+          target_post_id?: string
+          create_for_both?: boolean
+        }
+        Returns: string[]
+      }
+      create_manual_referral: {
+        Args: {
+          inviter_user_id: string
+          invitee_user_id: string
+          target_post_id?: string
+          invite_type_param?: string
+          create_rewards?: boolean
+        }
+        Returns: string
+      }
+      get_country_for_point: {
+        Args: {
+          input_lat: number
+          input_lng: number
+        }
+        Returns: {
+          country_id: string
+          country_name: string
+          iso_code_2: string
+          iso_code_3: string
+        }[]
+      }
+      get_country_geometry: {
+        Args: {
+          country_code: string
+        }
+        Returns: Json
+      }
       get_map_posts_in_range: {
         Args: {
           user_lat: number
@@ -1147,6 +1887,30 @@ export type Database = {
           distance_km: number
         }[]
       }
+      get_posts_v2_in_circle: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          radius_km?: number
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          lat: number
+          lng: number
+          content: string
+          views: number
+          poi_id: string
+          posted_from_poi: boolean
+          distance_from_center_km: number
+          gender: Database["public"]["Enums"]["gender_type"]
+          total_count: number
+        }[]
+      }
       get_posts_v2_in_viewport: {
         Args: {
           north_lat: number
@@ -1184,6 +1948,24 @@ export type Database = {
           sort_direction?: string
         }
         Returns: Json
+      }
+      get_referrals_by_post: {
+        Args: {
+          input_user_id: string
+          filter_post_id?: string
+          limit_count?: number
+          offset_count?: number
+        }
+        Returns: {
+          id: string
+          created_at: string
+          invitee_id: string
+          post_id: string
+          invite_type: string
+          install_detected: boolean
+          install_detected_at: string
+          reward_created: boolean
+        }[]
       }
       get_replies_v2_count: {
         Args: {
@@ -1247,6 +2029,32 @@ export type Database = {
           recent_replies: Json
         }[]
       }
+      get_user_referral_stats:
+        | {
+            Args: {
+              input_user_id: string
+            }
+            Returns: {
+              total_invites_sent: number
+              successful_referrals: number
+              pending_referrals: number
+              total_rewards: number
+              unclaimed_rewards: number
+            }[]
+          }
+        | {
+            Args: {
+              input_user_id: string
+              filter_post_id?: string
+            }
+            Returns: {
+              total_invites_sent: number
+              successful_referrals: number
+              pending_referrals: number
+              total_rewards: number
+              unclaimed_rewards: number
+            }[]
+          }
       get_user_replied_posts: {
         Args: {
           input_user_id: string
@@ -1266,6 +2074,43 @@ export type Database = {
           recent_replies: Json
         }[]
       }
+      get_user_replied_posts_v2: {
+        Args: {
+          input_user_id: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          content: string
+          lat: number
+          lng: number
+          views: number
+          thread_id: string
+          is_author: boolean
+          reply_count: number
+          last_reply_at: string
+          my_latest_reply: Json
+          recent_replies: Json
+        }[]
+      }
+      get_user_rewards: {
+        Args: {
+          input_user_id: string
+          limit_count?: number
+          offset_count?: number
+        }
+        Returns: {
+          id: string
+          created_at: string
+          reward_type: Database["public"]["Enums"]["reward_type"]
+          reward_status: Database["public"]["Enums"]["reward_status"]
+          title: string
+          description: string
+          reward_data: Json
+          claimed_at: string
+          expires_at: string
+        }[]
+      }
       increment_multiple_views: {
         Args: {
           post_ids: string[]
@@ -1277,6 +2122,34 @@ export type Database = {
           post_id: string
         }
         Returns: undefined
+      }
+      increment_view_v2: {
+        Args: {
+          post_id: string
+        }
+        Returns: undefined
+      }
+      posts_country_filtered_feed: {
+        Args: {
+          country_id_input: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          lat: number
+          lng: number
+          content: string
+          views: number
+          poi_id: string
+          posted_from_poi: boolean
+          distance_from_center_km: number
+          gender: Database["public"]["Enums"]["gender_type"]
+          total_count: number
+        }[]
       }
       posts_filtered_feed: {
         Args: {
@@ -1343,6 +2216,13 @@ export type Database = {
         | "misinformation"
         | "other"
       report_status: "pending" | "resolved" | "dismissed"
+      reward_status: "pending" | "completed" | "expired" | "cancelled"
+      reward_type:
+        | "circle_unlock_invite"
+        | "successful_referral"
+        | "first_post_bonus"
+        | "engagement_bonus"
+        | "milestone_reward"
     }
     CompositeTypes: {
       [_ in never]: never
