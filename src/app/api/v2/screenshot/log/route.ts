@@ -32,10 +32,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Parse request body
     const body: LogScreenshotRequest = await request.json();
     
-    // Validate that user_id matches authenticated user
     if (body.user_id !== user.id) {
       return NextResponse.json(
         { error: "User ID mismatch" },
@@ -43,17 +41,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get client IP address
     const clientIP = request.headers.get("x-forwarded-for") || 
                     request.headers.get("x-real-ip") || 
                     "unknown";
 
-    // Call the database function to log screenshot and handle lockout logic
     const { data, error } = await supabase.rpc('log_screenshot_attempt', {
       attempt_user_id: user.id,
-      device_id: body.device_id || null,
+      device_id: body.device_id || undefined,
       ip_address: clientIP,
-      user_agent: body.user_agent || request.headers.get('user-agent') || null
+      user_agent: body.user_agent || request.headers.get('user-agent') || undefined
     });
 
     if (error) {
