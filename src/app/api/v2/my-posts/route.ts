@@ -23,7 +23,7 @@ type ReplyWithUser = Omit<Tables<"replies_v2">, "upvotes"> & {
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
-  const authHeader = request.headers.get("authorization");
+  const authHeader = request.headers.get("authorization") || request.headers.get("x-authorization");
   const token = authHeader?.replace("Bearer ", "");
 
   if (!token) {

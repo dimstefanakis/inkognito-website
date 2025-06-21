@@ -51,7 +51,7 @@ export async function POST(
     const supabase = await createClient()
     const { id } = await params;
     
-    const authHeader = request.headers.get("authorization");
+    const authHeader = request.headers.get("authorization") || request.headers.get("x-authorization");
     const token = authHeader?.replace("Bearer ", "");
 
     if (!token) {
