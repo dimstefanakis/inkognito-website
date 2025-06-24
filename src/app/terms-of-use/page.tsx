@@ -6,30 +6,18 @@ export default function TermsOfService() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold mb-2">1. Acceptance of Terms</h2>
         <p>
-          By accessing or using our confession app, you agree to be bound by these Terms of Service.
-          If you do not agree to these terms, please do not use the app.
+          By accessing or using Leaks, our anonymous secret-sharing app, you agree to be bound by these
+          Terms of Service. If you do not agree to these terms, please do not use the app.
         </p>
 
         <h2 className="text-2xl font-semibold mb-2">2. Service Description</h2>
         <p>
-          Our app provides a platform for users to anonymously share and view confessions within their vicinity.
-          The service is available in two tiers:
+          Leaks lets people anonymously post secrets and discover nearby ones. To expand what you can see beyond
+          your immediate area we offer two optional subscription plans:
         </p>
         <ul className="list-disc pl-6 space-y-2">
-          <li>
-            <strong>Free Tier:</strong> Allows users to:
-            <ul className="list-circle pl-6 mt-1">
-              <li>View confessions within a 10km radius</li>
-              <li>Post anonymous confessions</li>
-              <li>View confessions in list format</li>
-            </ul>
-          </li>
-          <li>
-            <strong>Premium Tier ($3.99/week):</strong> Includes all free features plus:
-            <ul className="list-circle pl-6 mt-1">
-              <li>Interactive map view of confessions</li>
-            </ul>
-          </li>
+          <li><strong>Regional subscription:</strong> See every secret posted anywhere in your country.</li>
+          <li><strong>Global subscription:</strong> Explore all secrets posted worldwide.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mb-2">3. Subscription Terms</h2>
@@ -57,7 +45,6 @@ export default function TermsOfService() {
 
         <h2 className="text-2xl font-semibold mb-2">6. Content Removal and Reporting</h2>
         <p>
-          Users may request removal of their confessions within 24 hours of posting. We reserve the right to remove any content that violates
           these terms, applicable laws, or our community guidelines. Users can report harmful or illegal content directly within the app.
         </p>
 
@@ -87,7 +74,7 @@ export default function TermsOfService() {
 
         <h2 className="text-2xl font-semibold mb-2">11. Contact</h2>
         <p>
-          If you have any questions about these Terms of Service, please contact us at support@inkognito.app.
+          If you have any questions about these Terms of Service, please contact us at support@leaks.app.
         </p>
       </section>
     </div>

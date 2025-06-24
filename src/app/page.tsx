@@ -13,7 +13,7 @@ export default function Home() {
             height={32}
             className="rounded-full"
           />
-          <span className="text-xl font-semibold">Inkognito</span>
+          <span className="text-xl font-semibold">Leaks</span>
         </div>
       </nav>
 
@@ -22,7 +22,7 @@ export default function Home() {
         <div className="text-center">
           <div className="text-6xl mb-4">🚧</div>
           <h1 className="text-2xl font-semibold max-w-md p-4">
-            Inkognito is coming soon on android
+            Leaks is coming soon on android
           </h1>
         </div>
       </main>
