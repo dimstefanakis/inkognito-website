@@ -56,8 +56,7 @@ export async function POST(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { 
-          error: 'Failed to log screenshot',
-          details: error.message 
+          error: 'An unexpected error occurred',
         },
         { status: 500 }
       );
@@ -73,8 +72,7 @@ export async function POST(request: NextRequest) {
     console.error('Unexpected error:', error);
     return NextResponse.json(
       { 
-        error: 'Internal server error',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: 'An unexpected error occurred',
       },
       { status: 500 }
     );

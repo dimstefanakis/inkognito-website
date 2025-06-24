@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
     .eq("id", user.id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Profile update error:', error);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 
   return NextResponse.json({ data: data });
