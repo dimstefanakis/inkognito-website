@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Inkognito - Spy on your neighbors",
-  description: "Browse and share anonymous confessions near you",
+  title: "Leaks - Spy on your neighbors",
+  description: "Browse and share anonymous secrets near you",
 };
 
 export default function RootLayout({
