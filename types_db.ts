@@ -167,8 +167,12 @@ export type Database = {
           created_at: string
           id: string
           post_id: string | null
+          posts_v2_id: string | null
           reply_id: string | null
+          reply_v2_id: string | null
           severity_score: number
+          spiciness_category: string | null
+          spiciness_level: number | null
         }
         Insert: {
           action_taken?: string | null
@@ -176,8 +180,12 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string | null
+          posts_v2_id?: string | null
           reply_id?: string | null
+          reply_v2_id?: string | null
           severity_score: number
+          spiciness_category?: string | null
+          spiciness_level?: number | null
         }
         Update: {
           action_taken?: string | null
@@ -185,8 +193,12 @@ export type Database = {
           created_at?: string
           id?: string
           post_id?: string | null
+          posts_v2_id?: string | null
           reply_id?: string | null
+          reply_v2_id?: string | null
           severity_score?: number
+          spiciness_category?: string | null
+          spiciness_level?: number | null
         }
         Relationships: [
           {
@@ -194,6 +206,13 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_logs_posts_v2_id_fkey"
+            columns: ["posts_v2_id"]
+            isOneToOne: false
+            referencedRelation: "posts_v2"
             referencedColumns: ["id"]
           },
           {
@@ -208,6 +227,13 @@ export type Database = {
             columns: ["reply_id"]
             isOneToOne: false
             referencedRelation: "replies_public"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_logs_reply_v2_id_fkey"
+            columns: ["reply_v2_id"]
+            isOneToOne: false
+            referencedRelation: "replies_v2"
             referencedColumns: ["id"]
           },
         ]
@@ -438,9 +464,12 @@ export type Database = {
           lng: number | null
           moderated_at: string | null
           moderation_score: number | null
+          notification_message: string | null
           poi_id: string | null
           posted_from_poi: boolean | null
           requires_review: boolean | null
+          spiciness_category: string | null
+          spiciness_level: number | null
           user_id: string | null
           views: number | null
         }
@@ -456,9 +485,12 @@ export type Database = {
           lng?: number | null
           moderated_at?: string | null
           moderation_score?: number | null
+          notification_message?: string | null
           poi_id?: string | null
           posted_from_poi?: boolean | null
           requires_review?: boolean | null
+          spiciness_category?: string | null
+          spiciness_level?: number | null
           user_id?: string | null
           views?: number | null
         }
@@ -474,9 +506,12 @@ export type Database = {
           lng?: number | null
           moderated_at?: string | null
           moderation_score?: number | null
+          notification_message?: string | null
           poi_id?: string | null
           posted_from_poi?: boolean | null
           requires_review?: boolean | null
+          spiciness_category?: string | null
+          spiciness_level?: number | null
           user_id?: string | null
           views?: number | null
         }
@@ -686,6 +721,67 @@ export type Database = {
             columns: ["reporter_id"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reports_v2: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          is_user_flagged: boolean | null
+          post_id: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          reply_id: string | null
+          reporter_id: string
+          resolved_at: string | null
+          status: Database["public"]["Enums"]["report_status"] | null
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          is_user_flagged?: boolean | null
+          post_id?: string | null
+          reason: Database["public"]["Enums"]["report_reason"]
+          reply_id?: string | null
+          reporter_id: string
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["report_status"] | null
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          is_user_flagged?: boolean | null
+          post_id?: string | null
+          reason?: Database["public"]["Enums"]["report_reason"]
+          reply_id?: string | null
+          reporter_id?: string
+          resolved_at?: string | null
+          status?: Database["public"]["Enums"]["report_status"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_v2_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_v2_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "replies_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reports_v2_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
             referencedColumns: ["id"]
           },
         ]
@@ -939,6 +1035,50 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_trust_scores_v2: {
+        Row: {
+          created_at: string
+          flagged_posts: number | null
+          id: string
+          is_restricted: boolean | null
+          last_violation_at: string | null
+          total_posts: number | null
+          trust_score: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          flagged_posts?: number | null
+          id?: string
+          is_restricted?: boolean | null
+          last_violation_at?: string | null
+          total_posts?: number | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          flagged_posts?: number | null
+          id?: string
+          is_restricted?: boolean | null
+          last_violation_at?: string | null
+          total_posts?: number | null
+          trust_score?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_trust_scores_v2_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users_v2"
             referencedColumns: ["id"]
           },
         ]
@@ -1461,6 +1601,16 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_type"]
           total_count: number
         }[]
+      }
+      get_posts_v2_in_viewing_circle: {
+        Args: {
+          circle_id: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: Json
       }
       get_posts_v2_in_viewport: {
         Args: {
