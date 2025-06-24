@@ -86,7 +86,7 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold">Contact Us</h2>
         <p>
           If you have questions about this policy or wish to exercise your data rights, email us at
-          <a className="underline ml-1" href="mailto:support@leaks.app">support@leaks.app</a>.
+          <a className="underline ml-1" href="mailto:support@inkognito.app">support@inkognito.app</a>.
         </p>
       </section>
     </div>
