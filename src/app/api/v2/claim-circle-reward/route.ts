@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
 
       if (circleError) {
         console.error('Error creating fixed circle:', circleError);
-        return NextResponse.json({ error: "Failed to create viewing circle" }, { status: 500 });
+        return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
       }
 
       circle = circleData;
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
 
       if (circleError) {
         console.error('Error creating friend circle:', circleError);
-        return NextResponse.json({ error: "Failed to create viewing circle" }, { status: 500 });
+        return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
       }
 
       circle = circleData;
@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
         .delete()
         .eq('id', circle.id);
 
-      return NextResponse.json({ error: "Failed to claim reward" }, { status: 500 });
+      return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
     }
 
     // Return success response

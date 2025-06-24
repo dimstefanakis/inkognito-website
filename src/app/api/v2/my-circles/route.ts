@@ -32,7 +32,8 @@ export async function GET(request: NextRequest) {
     .eq("user_id", user.id);
 
   if (circlesError) {
-    return NextResponse.json({ error: circlesError.message }, { status: 500 });
+    console.error('Error fetching viewing circles:', circlesError);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 
   // Process circles and fetch friend coordinates for friend_location type

@@ -60,7 +60,8 @@ export async function GET(request: NextRequest) {
     .eq("user_id", user.id);
 
   if (countError) {
-    return NextResponse.json({ error: countError.message }, { status: 500 });
+    console.error('Error getting post count:', countError);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 
   // Get paginated posts
@@ -73,7 +74,8 @@ export async function GET(request: NextRequest) {
     .returns<Tables<"posts_v2">[]>();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Error fetching posts:', error);
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
   }
 
   const transformedPosts = data?.map((post) => ({

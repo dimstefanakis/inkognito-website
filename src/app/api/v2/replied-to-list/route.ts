@@ -43,7 +43,8 @@ export async function GET(request: NextRequest) {
       });
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error fetching replied posts:', error);
+      return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
     }
 
     // Calculate pagination

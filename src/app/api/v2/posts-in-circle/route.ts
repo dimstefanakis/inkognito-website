@@ -140,8 +140,9 @@ export async function GET(request: NextRequest) {
     );
 
     if (postsError) {
+      console.error('Error fetching posts in circle:', postsError);
       return NextResponse.json(
-        { error: postsError.message },
+        { error: "An unexpected error occurred" },
         { status: 500 }
       );
     }
