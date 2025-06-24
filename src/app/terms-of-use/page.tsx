@@ -74,7 +74,7 @@ export default function TermsOfService() {
 
         <h2 className="text-2xl font-semibold mb-2">11. Contact</h2>
         <p>
-          If you have any questions about these Terms of Service, please contact us at support@leaks.app.
+          If you have any questions about these Terms of Service, please contact us at support@inkognito.app.
         </p>
       </section>
     </div>
