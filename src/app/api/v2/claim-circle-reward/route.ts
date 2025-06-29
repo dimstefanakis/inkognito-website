@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       .select('*')
       .eq('id', rewardId)
       .eq('user_id', user.id)
-      .eq('reward_type', 'circle_unlock_invite')
+      .or(`reward_type.eq.circle_unlock_invite,reward_type.eq.gift_circle`)
       .is('claimed_at', null)
       .single();
 

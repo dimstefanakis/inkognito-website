@@ -22,9 +22,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { branch_params, expo_push_token, lat, lng, gender } = await request.json();
+  const { branch_params, expo_push_token, version, lat, lng, gender } = await request.json();
 
   const updateData: Record<string, string> = {};
+
+  if (version !== null && version !== undefined && version.trim() !== "") {
+    updateData.version = version;
+  }
 
   if (branch_params !== null && branch_params !== undefined && Object.keys(branch_params).length > 0) {
     updateData.branch_data = JSON.stringify(branch_params);
