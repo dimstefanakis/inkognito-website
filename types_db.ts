@@ -36,6 +36,7 @@ export type Database = {
     Tables: {
       app_config: {
         Row: {
+          config_v2: Json | null
           created_at: string
           hard_paywall_offering_identifier: string | null
           id: string
@@ -45,6 +46,7 @@ export type Database = {
           spy_pill_paywall_offering_identifier: string | null
         }
         Insert: {
+          config_v2?: Json | null
           created_at?: string
           hard_paywall_offering_identifier?: string | null
           id?: string
@@ -54,6 +56,7 @@ export type Database = {
           spy_pill_paywall_offering_identifier?: string | null
         }
         Update: {
+          config_v2?: Json | null
           created_at?: string
           hard_paywall_offering_identifier?: string | null
           id?: string
@@ -557,6 +560,58 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reactions: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string | null
+          reaction_type: Database["public"]["Enums"]["reaction_type"]
+          reply_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reaction_type: Database["public"]["Enums"]["reaction_type"]
+          reply_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reaction_type?: Database["public"]["Enums"]["reaction_type"]
+          reply_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reactions_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reactions_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "replies_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
             referencedColumns: ["id"]
           },
         ]
@@ -1524,6 +1579,15 @@ export type Database = {
           distance_km: number
         }[]
       }
+      get_post_reaction_counts: {
+        Args: {
+          input_post_id: string
+        }
+        Returns: {
+          likes: number
+          dislikes: number
+        }[]
+      }
       get_post_v2: {
         Args: {
           input_post_id: string
@@ -1539,6 +1603,8 @@ export type Database = {
           posted_from_poi: boolean
           gender: string
           reply_count: number
+          like_count: number
+          dislike_count: number
         }[]
       }
       get_posts_by_distance: {
@@ -1600,6 +1666,8 @@ export type Database = {
           distance_from_center_km: number
           gender: Database["public"]["Enums"]["gender_type"]
           total_count: number
+          like_count: number
+          dislike_count: number
         }[]
       }
       get_posts_v2_in_viewing_circle: {
@@ -1692,6 +1760,17 @@ export type Database = {
           is_author: boolean
           thread_id: number
           gender: string
+          like_count: number
+          dislike_count: number
+        }[]
+      }
+      get_reply_reaction_counts: {
+        Args: {
+          input_reply_id: string
+        }
+        Returns: {
+          likes: number
+          dislikes: number
         }[]
       }
       get_top_onboarding_posts: {
@@ -1737,31 +1816,31 @@ export type Database = {
         }[]
       }
       get_user_referral_stats:
-        | {
-            Args: {
-              input_user_id: string
-            }
-            Returns: {
-              total_invites_sent: number
-              successful_referrals: number
-              pending_referrals: number
-              total_rewards: number
-              unclaimed_rewards: number
-            }[]
-          }
-        | {
-            Args: {
-              input_user_id: string
-              filter_post_id?: string
-            }
-            Returns: {
-              total_invites_sent: number
-              successful_referrals: number
-              pending_referrals: number
-              total_rewards: number
-              unclaimed_rewards: number
-            }[]
-          }
+      | {
+        Args: {
+          input_user_id: string
+        }
+        Returns: {
+          total_invites_sent: number
+          successful_referrals: number
+          pending_referrals: number
+          total_rewards: number
+          unclaimed_rewards: number
+        }[]
+      }
+      | {
+        Args: {
+          input_user_id: string
+          filter_post_id?: string
+        }
+        Returns: {
+          total_invites_sent: number
+          successful_referrals: number
+          pending_referrals: number
+          total_rewards: number
+          unclaimed_rewards: number
+        }[]
+      }
       get_user_replied_posts: {
         Args: {
           input_user_id: string
@@ -1934,23 +2013,34 @@ export type Database = {
           is_author: boolean
         }[]
       }
+      toggle_reaction: {
+        Args: {
+          p_user_id: string
+          p_reaction_type: Database["public"]["Enums"]["reaction_type"]
+          p_post_id?: string
+          p_reply_id?: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       gender_type: "male" | "female" | "other"
+      reaction_type: "like" | "dislike"
       report_reason:
-        | "inappropriate"
-        | "spam"
-        | "harassment"
-        | "misinformation"
-        | "other"
+      | "inappropriate"
+      | "spam"
+      | "harassment"
+      | "misinformation"
+      | "other"
       report_status: "pending" | "resolved" | "dismissed"
       reward_status: "pending" | "completed" | "expired" | "cancelled"
       reward_type:
-        | "circle_unlock_invite"
-        | "successful_referral"
-        | "first_post_bonus"
-        | "engagement_bonus"
-        | "milestone_reward"
+      | "circle_unlock_invite"
+      | "successful_referral"
+      | "first_post_bonus"
+      | "engagement_bonus"
+      | "milestone_reward"
+      | "gift_circle"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1962,96 +2052,96 @@ type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
-    | { schema: keyof Database },
+  | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+  ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+    Database[PublicTableNameOrOptions["schema"]]["Views"])
+  : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+    Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-    ? R
-    : never
+  ? R
+  : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
+    PublicSchema["Views"])
+  ? (PublicSchema["Tables"] &
+    PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+      Row: infer R
+    }
+  ? R
+  : never
+  : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  | keyof PublicSchema["Tables"]
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
+    Insert: infer I
+  }
+  ? I
+  : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+    Insert: infer I
+  }
+  ? I
+  : never
+  : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  | keyof PublicSchema["Tables"]
+  | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
+    Update: infer U
+  }
+  ? U
+  : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
+  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+    Update: infer U
+  }
+  ? U
+  : never
+  : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
-    | { schema: keyof Database },
+  | keyof PublicSchema["Enums"]
+  | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+  ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+  : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-    : never
+  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+  : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
-    | { schema: keyof Database },
+  | keyof PublicSchema["CompositeTypes"]
+  | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+  ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+  : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never
 
