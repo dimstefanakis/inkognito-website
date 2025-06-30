@@ -15,10 +15,8 @@ type MyPost = Omit<
   replies: Omit<Tables<"replies_v2">, "user_id" | "upvotes">[];
   reply_count: number;
   gender: string | null;
-};
-
-type ReplyWithUser = Omit<Tables<"replies_v2">, "upvotes"> & {
-  user_id: Tables<"users_v2"> | null;
+  like_count: number;
+  dislike_count: number;
 };
 
 export async function GET(request: NextRequest) {
@@ -49,7 +47,6 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "10");
-  
   // Calculate offset
   const offset = (page - 1) * limit;
 
@@ -95,33 +92,46 @@ export async function GET(request: NextRequest) {
     gender: (post.user_id as unknown as Tables<"users_v2">)?.gender || null,
     replies: [],
     reply_count: 0,
+    like_count: 0,
+    dislike_count: 0,
   }));
 
   const posts: MyPost[] = [];
   const cleanPosts = transformedPosts || [];
 
   for (const post of cleanPosts) {
-    const { data: replies, error: repliesError } = await supabase
-      .from("replies_v2")
-      .select("user_id(*), id, created_at, content, post_id, is_author, thread_id")
-      .eq("post_id", post.id)
-      .order("created_at", { ascending: false })
-      .limit(4)
-      .returns<ReplyWithUser[]>();
+    const { data: repliesData, error: repliesError } = await supabase
+      .rpc('get_replies_v2_for_post', {
+        input_post_id: post.id,
+        sort_by: 'created_at',
+        sort_direction: 'desc',
+        limit_count: 50,
+        offset_count: 0
+      });
+
+    const { data: reactionsData, error: reactionsError } = await supabase
+      .rpc('get_post_reaction_counts', {
+        input_post_id: post.id,
+      });
+
+    post.like_count = reactionsData?.[0]?.likes || 0;
+    post.dislike_count = reactionsData?.[0]?.dislikes || 0;
 
     const { data: totalReplies, error: totalRepliesError } = await supabase
       .rpc("get_replies_v2_count", { input_post_id: post.id });
 
     posts.push({
       ...post,
-      replies: replies ? replies.map((reply) => ({
+      replies: repliesData ? repliesData.map((reply) => ({
         id: reply.id,
         created_at: reply.created_at,
         content: reply.content,
         post_id: reply.post_id,
         thread_id: reply.thread_id,
         is_author: reply.is_author,
-        gender: reply.user_id?.gender || null,
+        gender: reply.gender,
+        like_count: reply.like_count || 0,
+        dislike_count: reply.dislike_count || 0,
       })) : [],
       reply_count: totalReplies || 0,
     });
