@@ -6,7 +6,6 @@ interface RewardData {
   radius?: number;
   circle_id?: string;
   type?: string;
-  [key: string]: any;
 }
 
 export async function POST(request: NextRequest) {
@@ -149,7 +148,7 @@ export async function POST(request: NextRequest) {
         claimed_at: new Date().toISOString(),
         reward_status: 'completed',
         reward_data: {
-          ...(reward.reward_data as RewardData || {}),
+          ...(reward.reward_data as Record<string, unknown> || {}),
           circle_id: circle?.id,
           type: type
         }
