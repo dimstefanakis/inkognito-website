@@ -63,6 +63,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Reward has expired" }, { status: 400 });
     }
 
+    // Extract radius from reward data, default to 2km
+    const radiusKm = (reward.reward_data as any)?.radius || 2;
+
     let circle: Tables<'viewing_circles'> | null = null;
 
     // Create the viewing circle based on type
@@ -78,7 +81,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           lat: lat,
           lng: lng,
-          radius_km: 2,
+          radius_km: radiusKm,
           type: 'fixed',
           created_at: new Date().toISOString()
         })
@@ -113,7 +116,7 @@ export async function POST(request: NextRequest) {
         .insert({
           user_id: user.id,
           friend_user_id: friendUserId,
-          radius_km: 2,
+          radius_km: radiusKm,
           type: 'friend_location',
           created_at: new Date().toISOString()
         })
