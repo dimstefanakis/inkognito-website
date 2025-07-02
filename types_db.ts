@@ -1644,6 +1644,16 @@ export type Database = {
           distance_km: number
         }[]
       }
+      get_posts_v2_in_all_viewing_circles: {
+        Args: {
+          input_user_id: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: Json
+      }
       get_posts_v2_in_circle: {
         Args: {
           center_lat: number
@@ -1704,6 +1714,20 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_type"]
           total_count: number
         }[]
+      }
+      get_posts_v2_in_viewport_country_filtered: {
+        Args: {
+          north_lat: number
+          south_lat: number
+          east_lng: number
+          west_lng: number
+          input_user_id: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: Json
       }
       get_posts_v2_in_viewport_with_reply_count: {
         Args: {
@@ -1877,6 +1901,8 @@ export type Database = {
           gender: string
           my_latest_reply: Json
           recent_replies: Json
+          like_count: number
+          dislike_count: number
         }[]
       }
       get_user_rewards: {

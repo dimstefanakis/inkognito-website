@@ -2,6 +2,12 @@ import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import type { Tables } from "../../../../../types_db";
 
+interface RewardData {
+  radius?: number;
+  circle_id?: string;
+  type?: string;
+}
+
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const authHeader = request.headers.get("authorization") || request.headers.get("x-authorization");
@@ -63,6 +69,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Reward has expired" }, { status: 400 });
     }
 
+    // Extract radius from reward data, default to 2km
+    const radiusKm = (reward.reward_data as RewardData)?.radius || 2;
+
     let circle: Tables<'viewing_circles'> | null = null;
 
     // Create the viewing circle based on type
@@ -78,7 +87,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           lat: lat,
           lng: lng,
-          radius_km: 2,
+          radius_km: radiusKm,
           type: 'fixed',
           created_at: new Date().toISOString()
         })
@@ -113,7 +122,7 @@ export async function POST(request: NextRequest) {
         .insert({
           user_id: user.id,
           friend_user_id: friendUserId,
-          radius_km: 2,
+          radius_km: radiusKm,
           type: 'friend_location',
           created_at: new Date().toISOString()
         })
@@ -139,7 +148,7 @@ export async function POST(request: NextRequest) {
         claimed_at: new Date().toISOString(),
         reward_status: 'completed',
         reward_data: {
-          ...(reward.reward_data as object || {}),
+          ...(reward.reward_data as Record<string, unknown> || {}),
           circle_id: circle?.id,
           type: type
         }
