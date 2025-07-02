@@ -2,6 +2,13 @@ import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import type { Tables } from "../../../../../types_db";
 
+interface RewardData {
+  radius?: number;
+  circle_id?: string;
+  type?: string;
+  [key: string]: any;
+}
+
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const authHeader = request.headers.get("authorization") || request.headers.get("x-authorization");
@@ -64,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Extract radius from reward data, default to 2km
-    const radiusKm = (reward.reward_data as any)?.radius || 2;
+    const radiusKm = (reward.reward_data as RewardData)?.radius || 2;
 
     let circle: Tables<'viewing_circles'> | null = null;
 
@@ -142,7 +149,7 @@ export async function POST(request: NextRequest) {
         claimed_at: new Date().toISOString(),
         reward_status: 'completed',
         reward_data: {
-          ...(reward.reward_data as object || {}),
+          ...(reward.reward_data as RewardData || {}),
           circle_id: circle?.id,
           type: type
         }
