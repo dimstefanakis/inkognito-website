@@ -616,6 +616,51 @@ export type Database = {
           },
         ]
       }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          expires_at: string
+          id: string
+          invitee_id: string | null
+          inviter_id: string
+          used_at: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invitee_id?: string | null
+          inviter_id: string
+          used_at?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          invitee_id?: string | null
+          inviter_id?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_invitee"
+            columns: ["invitee_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_inviter"
+            columns: ["inviter_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       replies: {
         Row: {
           content: string | null
@@ -1385,6 +1430,13 @@ export type Database = {
         }
         Returns: boolean
       }
+      compare_versions: {
+        Args: {
+          version1: string
+          version2: string
+        }
+        Returns: boolean
+      }
       confessions_personalized_feed: {
         Args: {
           user_lat: number
@@ -1483,6 +1535,17 @@ export type Database = {
           target_post_id?: string
           invite_type_param?: string
           create_rewards?: boolean
+        }
+        Returns: string
+      }
+      generate_referral_code:
+      | {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      | {
+        Args: {
+          p_user_id: string
         }
         Returns: string
       }
@@ -1947,9 +2010,22 @@ export type Database = {
         }
         Returns: undefined
       }
+      is_current_user_version_newer_or_equal: {
+        Args: {
+          minimum_version: string
+        }
+        Returns: boolean
+      }
       is_user_locked_out: {
         Args: {
           check_user_id: string
+        }
+        Returns: boolean
+      }
+      is_user_version_newer_or_equal: {
+        Args: {
+          input_user_id: string
+          minimum_version: string
         }
         Returns: boolean
       }
