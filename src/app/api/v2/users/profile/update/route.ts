@@ -57,7 +57,9 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from("users_v2")
     .update(updateData)
-    .eq("id", user.id);
+    .eq("id", user.id)
+    .select("*")
+    .single();
 
   if (error) {
     console.error('Profile update error:', error);
