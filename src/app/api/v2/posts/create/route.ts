@@ -32,7 +32,7 @@ function validateContent(text: string): { isValid: boolean; error?: string } {
 function randomizeCoordinates(
   lat: number,
   lng: number,
-  radiusMeters: number = 500
+  radiusMeters: number = 200
 ): { lat: number; lng: number } {
   // Convert radius from meters to degrees (approximate)
   const radiusInDegrees = radiusMeters / 111000; // 1 degree ≈ 111km
@@ -96,11 +96,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
-  // Randomize coordinates within 500m radius
+  // Randomize coordinates within 200m radius
   const randomizedCoords = randomizeCoordinates(
     userData.lat || 0,
     userData.lng || 0,
-    500
+    200
   );
 
   const { data, error } = await supabase.from("posts_v2").insert({
