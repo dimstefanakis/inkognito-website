@@ -125,6 +125,7 @@ export type Database = {
           continent: string | null
           created_at: string
           geometry: unknown
+          geometry_simplified: unknown | null
           id: string
           is_active: boolean | null
           iso_code_2: string
@@ -139,6 +140,7 @@ export type Database = {
           continent?: string | null
           created_at?: string
           geometry: unknown
+          geometry_simplified?: unknown | null
           id?: string
           is_active?: boolean | null
           iso_code_2: string
@@ -153,6 +155,7 @@ export type Database = {
           continent?: string | null
           created_at?: string
           geometry?: unknown
+          geometry_simplified?: unknown | null
           id?: string
           is_active?: boolean | null
           iso_code_2?: string
@@ -247,6 +250,7 @@ export type Database = {
           created_at: string
           data: Json | null
           id: string
+          title: string | null
           user_id: string | null
           user_v2_id: string | null
         }
@@ -255,6 +259,7 @@ export type Database = {
           created_at?: string
           data?: Json | null
           id?: string
+          title?: string | null
           user_id?: string | null
           user_v2_id?: string | null
         }
@@ -263,6 +268,7 @@ export type Database = {
           created_at?: string
           data?: Json | null
           id?: string
+          title?: string | null
           user_id?: string | null
           user_v2_id?: string | null
         }
@@ -317,6 +323,8 @@ export type Database = {
         Row: {
           address: Json | null
           category: string | null
+          col: number | null
+          country_id: string | null
           created_at: string | null
           geom: unknown | null
           google_place_id: string | null
@@ -330,6 +338,7 @@ export type Database = {
           photos: Json | null
           primary_type: string | null
           primary_type_display_name: string | null
+          row: number | null
           saved_images: string[] | null
           types: string[] | null
           updated_at: string | null
@@ -337,6 +346,8 @@ export type Database = {
         Insert: {
           address?: Json | null
           category?: string | null
+          col?: number | null
+          country_id?: string | null
           created_at?: string | null
           geom?: unknown | null
           google_place_id?: string | null
@@ -350,6 +361,7 @@ export type Database = {
           photos?: Json | null
           primary_type?: string | null
           primary_type_display_name?: string | null
+          row?: number | null
           saved_images?: string[] | null
           types?: string[] | null
           updated_at?: string | null
@@ -357,6 +369,8 @@ export type Database = {
         Update: {
           address?: Json | null
           category?: string | null
+          col?: number | null
+          country_id?: string | null
           created_at?: string | null
           geom?: unknown | null
           google_place_id?: string | null
@@ -370,11 +384,20 @@ export type Database = {
           photos?: Json | null
           primary_type?: string | null
           primary_type_display_name?: string | null
+          row?: number | null
           saved_images?: string[] | null
           types?: string[] | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "pois_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       posts: {
         Row: {
@@ -456,7 +479,10 @@ export type Database = {
       }
       posts_v2: {
         Row: {
+          col: number | null
           content: string | null
+          country_code: string | null
+          country_id: string | null
           created_at: string
           geom: unknown | null
           hidden: boolean | null
@@ -471,13 +497,17 @@ export type Database = {
           poi_id: string | null
           posted_from_poi: boolean | null
           requires_review: boolean | null
+          row: number | null
           spiciness_category: string | null
           spiciness_level: number | null
           user_id: string | null
           views: number | null
         }
         Insert: {
+          col?: number | null
           content?: string | null
+          country_code?: string | null
+          country_id?: string | null
           created_at?: string
           geom?: unknown | null
           hidden?: boolean | null
@@ -492,13 +522,17 @@ export type Database = {
           poi_id?: string | null
           posted_from_poi?: boolean | null
           requires_review?: boolean | null
+          row?: number | null
           spiciness_category?: string | null
           spiciness_level?: number | null
           user_id?: string | null
           views?: number | null
         }
         Update: {
+          col?: number | null
           content?: string | null
+          country_code?: string | null
+          country_id?: string | null
           created_at?: string
           geom?: unknown | null
           hidden?: boolean | null
@@ -513,12 +547,20 @@ export type Database = {
           poi_id?: string | null
           posted_from_poi?: boolean | null
           requires_review?: boolean | null
+          row?: number | null
           spiciness_category?: string | null
           spiciness_level?: number | null
           user_id?: string | null
           views?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "posts_v2_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "posts_v2_poi_id_fkey"
             columns: ["poi_id"]
@@ -956,6 +998,84 @@ export type Database = {
           },
         ]
       }
+      trails: {
+        Row: {
+          col: number
+          country_id: string
+          row: number
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          col: number
+          country_id: string
+          row: number
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          col?: number
+          country_id?: string
+          row?: number
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trails_country_id_fkey"
+            columns: ["country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trails_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_post_views: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+          viewed_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+          viewed_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_post_views_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_v2"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_post_views_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users_v2"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_referrals: {
         Row: {
           branch_data: Json | null
@@ -1227,6 +1347,7 @@ export type Database = {
           email: string | null
           expo_push_token: string | null
           gender: Database["public"]["Enums"]["gender_type"] | null
+          geom: unknown | null
           id: string
           is_subscribed: boolean | null
           last_location_update: string | null
@@ -1241,6 +1362,7 @@ export type Database = {
           email?: string | null
           expo_push_token?: string | null
           gender?: Database["public"]["Enums"]["gender_type"] | null
+          geom?: unknown | null
           id?: string
           is_subscribed?: boolean | null
           last_location_update?: string | null
@@ -1255,6 +1377,7 @@ export type Database = {
           email?: string | null
           expo_push_token?: string | null
           gender?: Database["public"]["Enums"]["gender_type"] | null
+          geom?: unknown | null
           id?: string
           is_subscribed?: boolean | null
           last_location_update?: string | null
@@ -1400,6 +1523,14 @@ export type Database = {
       }
     }
     Functions: {
+      auto_unlock_starting_hexagons: {
+        Args: {
+          input_user_id: string
+          input_lat: number
+          input_lng: number
+        }
+        Returns: Json
+      }
       calculate_distance: {
         Args: {
           lat1: number
@@ -1429,6 +1560,25 @@ export type Database = {
           max_age_days?: number
         }
         Returns: boolean
+      }
+      check_user_hotzone_by_id: {
+        Args: {
+          input_user_id: string
+          radius_meters?: number
+          activity_threshold_minutes?: number
+          hotzone_user_threshold?: number
+        }
+        Returns: Json
+      }
+      check_user_in_hotzone: {
+        Args: {
+          user_lat: number
+          user_lng: number
+          radius_meters?: number
+          activity_threshold_minutes?: number
+          hotzone_user_threshold?: number
+        }
+        Returns: Json
       }
       compare_versions: {
         Args: {
@@ -1539,13 +1689,68 @@ export type Database = {
         Returns: string
       }
       generate_referral_code:
-      | {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      | {
+        | {
+            Args: Record<PropertyKey, never>
+            Returns: string
+          }
+        | {
+            Args: {
+              p_user_id: string
+            }
+            Returns: string
+          }
+      get_active_users_heatmap_data: {
         Args: {
-          p_user_id: string
+          north_lat: number
+          south_lat: number
+          east_lng: number
+          west_lng: number
+          activity_threshold_minutes?: number
+          limit_count?: number
+          zoom_level?: number
+        }
+        Returns: Json
+      }
+      get_area_activity_summary: {
+        Args: {
+          center_lat: number
+          center_lng: number
+          radius_km?: number
+          activity_threshold_minutes?: number
+        }
+        Returns: Json
+      }
+      get_closest_pois: {
+        Args: {
+          input_user_id: string
+          user_lat: number
+          user_lng: number
+        }
+        Returns: {
+          id: string
+          google_place_id: string
+          name: string
+          category: string
+          lat: number
+          lng: number
+          logo_url: string
+          address: Json
+          icon_background_color: string
+          icon_mask_base_uri: string
+          photos: Json
+          primary_type: string
+          primary_type_display_name: string
+          saved_images: string[]
+          types: string[]
+          country_id: string
+          row: number
+          col: number
+          distance_km: number
+        }[]
+      }
+      get_country_code_from_geom: {
+        Args: {
+          input_geom: unknown
         }
         Returns: string
       }
@@ -1561,9 +1766,50 @@ export type Database = {
           iso_code_3: string
         }[]
       }
+      get_country_for_point_optimized: {
+        Args: {
+          input_lat: number
+          input_lng: number
+        }
+        Returns: {
+          country_id: string
+          country_name: string
+          iso_code_2: string
+          iso_code_3: string
+        }[]
+      }
       get_country_geometry: {
         Args: {
           country_code: string
+        }
+        Returns: Json
+      }
+      get_country_id_for_point_optimized: {
+        Args: {
+          input_lat: number
+          input_lng: number
+        }
+        Returns: string
+      }
+      get_grid_cells_in_viewport: {
+        Args: {
+          p_min_lng: number
+          p_min_lat: number
+          p_max_lng: number
+          p_max_lat: number
+          p_country_id?: string
+        }
+        Returns: Json
+      }
+      get_hotzones_in_area: {
+        Args: {
+          north_lat: number
+          south_lat: number
+          east_lng: number
+          west_lng: number
+          grid_size_meters?: number
+          activity_threshold_minutes?: number
+          hotzone_user_threshold?: number
         }
         Returns: Json
       }
@@ -1605,6 +1851,31 @@ export type Database = {
           stories: Json
         }[]
       }
+      get_pois_in_hexagon: {
+        Args: {
+          p_country_id: string
+          p_row: number
+          p_col: number
+        }
+        Returns: {
+          id: string
+          google_place_id: string
+          name: string
+          category: string
+          lat: number
+          lng: number
+          logo_url: string
+          address: Json
+          icon_background_color: string
+          icon_mask_base_uri: string
+          photos: Json
+          primary_type: string
+          primary_type_display_name: string
+          saved_images: string[]
+          types: string[]
+          post_count: number
+        }[]
+      }
       get_pois_in_radius: {
         Args: {
           center_lat: number
@@ -1640,6 +1911,63 @@ export type Database = {
           primary_type_display_name: string
           photos: Json
           distance_km: number
+        }[]
+      }
+      get_pois_in_user_trail: {
+        Args: {
+          p_user_id: string
+          p_limit?: number
+        }
+        Returns: {
+          id: string
+          google_place_id: string
+          name: string
+          category: string
+          lat: number
+          lng: number
+          logo_url: string
+          address: Json
+          icon_background_color: string
+          icon_mask_base_uri: string
+          photos: Json
+          primary_type: string
+          primary_type_display_name: string
+          saved_images: string[]
+          types: string[]
+          country_id: string
+          row: number
+          col: number
+          post_count: number
+        }[]
+      }
+      get_pois_in_viewport: {
+        Args: {
+          north_lat: number
+          south_lat: number
+          east_lng: number
+          west_lng: number
+          p_limit?: number
+        }
+        Returns: {
+          id: string
+          google_place_id: string
+          name: string
+          category: string
+          lat: number
+          lng: number
+          logo_url: string
+          address: Json
+          icon_background_color: string
+          icon_mask_base_uri: string
+          photos: Json
+          primary_type: string
+          primary_type_display_name: string
+          saved_images: string[]
+          types: string[]
+          country_id: string
+          row: number
+          col: number
+          post_count: number
         }[]
       }
       get_post_reaction_counts: {
@@ -1686,6 +2014,16 @@ export type Database = {
           reply_count: number
         }[]
       }
+      get_posts_in_user_trail: {
+        Args: {
+          input_user_id: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: Json
+      }
       get_posts_v2_by_distance: {
         Args: {
           user_lat: number
@@ -1706,6 +2044,17 @@ export type Database = {
           posted_from_poi: boolean
           distance_km: number
         }[]
+      }
+      get_posts_v2_for_poi: {
+        Args: {
+          poi_id_filter: string
+          input_user_id: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: Json
       }
       get_posts_v2_in_all_viewing_circles: {
         Args: {
@@ -1805,6 +2154,20 @@ export type Database = {
         }
         Returns: Json
       }
+      get_posts_v2_in_viewport_with_reply_count_filtered: {
+        Args: {
+          north_lat: number
+          south_lat: number
+          east_lng: number
+          west_lng: number
+          input_user_id: string
+          limit_count?: number
+          offset_count?: number
+          sort_by?: string
+          sort_direction?: string
+        }
+        Returns: Json
+      }
       get_referrals_by_post: {
         Args: {
           input_user_id: string
@@ -1877,6 +2240,32 @@ export type Database = {
           gender: Database["public"]["Enums"]["gender_type"]
         }[]
       }
+      get_user_accessible_hexagons: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          country_id: string
+          row: number
+          col: number
+          geom_geojson: string
+          center_lat: number
+          center_lng: number
+          unlocked_at: string
+        }[]
+      }
+      get_user_coverage_info: {
+        Args: {
+          p_lat: number
+          p_lng: number
+        }
+        Returns: {
+          country_id: string
+          country_name: string
+          has_coverage: boolean
+          should_auto_grant_global: boolean
+        }[]
+      }
       get_user_lockout_status: {
         Args: {
           check_user_id: string
@@ -1902,32 +2291,38 @@ export type Database = {
           recent_replies: Json
         }[]
       }
+      get_user_posts_count_stats: {
+        Args: {
+          input_user_id: string
+        }
+        Returns: Json
+      }
       get_user_referral_stats:
-      | {
-        Args: {
-          input_user_id: string
-        }
-        Returns: {
-          total_invites_sent: number
-          successful_referrals: number
-          pending_referrals: number
-          total_rewards: number
-          unclaimed_rewards: number
-        }[]
-      }
-      | {
-        Args: {
-          input_user_id: string
-          filter_post_id?: string
-        }
-        Returns: {
-          total_invites_sent: number
-          successful_referrals: number
-          pending_referrals: number
-          total_rewards: number
-          unclaimed_rewards: number
-        }[]
-      }
+        | {
+            Args: {
+              input_user_id: string
+            }
+            Returns: {
+              total_invites_sent: number
+              successful_referrals: number
+              pending_referrals: number
+              total_rewards: number
+              unclaimed_rewards: number
+            }[]
+          }
+        | {
+            Args: {
+              input_user_id: string
+              filter_post_id?: string
+            }
+            Returns: {
+              total_invites_sent: number
+              successful_referrals: number
+              pending_referrals: number
+              total_rewards: number
+              unclaimed_rewards: number
+            }[]
+          }
       get_user_replied_posts: {
         Args: {
           input_user_id: string
@@ -1992,6 +2387,19 @@ export type Database = {
         }
         Returns: number
       }
+      has_country_hexagon_coverage: {
+        Args: {
+          p_country_id: string
+        }
+        Returns: boolean
+      }
+      has_location_hexagon_coverage: {
+        Args: {
+          p_lat: number
+          p_lng: number
+        }
+        Returns: boolean
+      }
       increment_multiple_views: {
         Args: {
           post_ids: string[]
@@ -2037,6 +2445,25 @@ export type Database = {
           user_agent?: string
         }
         Returns: Json
+      }
+      mark_post_as_seen: {
+        Args: {
+          input_user_id: string
+          input_post_id: string
+        }
+        Returns: undefined
+      }
+      populate_missing_posts_precision: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      populate_pois_hexagon_coords: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      populate_posts_hexagon_coords: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       posts_country_filtered_feed: {
         Args: {
@@ -2115,6 +2542,36 @@ export type Database = {
           is_author: boolean
         }[]
       }
+      search_pois_by_name_and_distance: {
+        Args: {
+          input_user_id: string
+          search_term?: string
+          max_distance_km?: number
+          poi_limit?: number
+        }
+        Returns: {
+          id: string
+          google_place_id: string
+          name: string
+          category: string
+          lat: number
+          lng: number
+          logo_url: string
+          address: Json
+          icon_background_color: string
+          icon_mask_base_uri: string
+          photos: Json
+          primary_type: string
+          primary_type_display_name: string
+          saved_images: string[]
+          types: string[]
+          country_id: string
+          row: number
+          col: number
+          distance_km: number
+          post_count: number
+        }[]
+      }
       toggle_reaction: {
         Args: {
           p_user_id: string
@@ -2124,25 +2581,48 @@ export type Database = {
         }
         Returns: Json
       }
+      track_user_location: {
+        Args: {
+          p_user_id: string
+          p_lat: number
+          p_lng: number
+        }
+        Returns: {
+          success: boolean
+          country_id: string
+          row: number
+          col: number
+          is_new_hexagon: boolean
+        }[]
+      }
+      unlock_hexagon_for_user: {
+        Args: {
+          p_user_id: string
+          p_country_id: string
+          p_row: number
+          p_col: number
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       gender_type: "male" | "female" | "other"
       reaction_type: "like" | "dislike"
       report_reason:
-      | "inappropriate"
-      | "spam"
-      | "harassment"
-      | "misinformation"
-      | "other"
+        | "inappropriate"
+        | "spam"
+        | "harassment"
+        | "misinformation"
+        | "other"
       report_status: "pending" | "resolved" | "dismissed"
       reward_status: "pending" | "completed" | "expired" | "cancelled"
       reward_type:
-      | "circle_unlock_invite"
-      | "successful_referral"
-      | "first_post_bonus"
-      | "engagement_bonus"
-      | "milestone_reward"
-      | "gift_circle"
+        | "circle_unlock_invite"
+        | "successful_referral"
+        | "first_post_bonus"
+        | "engagement_bonus"
+        | "milestone_reward"
+        | "gift_circle"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2154,96 +2634,95 @@ type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
-  | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
-  | { schema: keyof Database },
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-  ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-    Database[PublicTableNameOrOptions["schema"]]["Views"])
-  : never = never,
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-    Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-  ? R
-  : never
+    ? R
+    : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-    PublicSchema["Views"])
-  ? (PublicSchema["Tables"] &
-    PublicSchema["Views"])[PublicTableNameOrOptions] extends {
-      Row: infer R
-    }
-  ? R
-  : never
-  : never
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-  | keyof PublicSchema["Tables"]
-  | { schema: keyof Database },
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
+      Insert: infer I
+    }
+    ? I
+    : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-    Insert: infer I
-  }
-  ? I
-  : never
-  : never
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-  | keyof PublicSchema["Tables"]
-  | { schema: keyof Database },
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-  ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
-  : never = never,
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-    Update: infer U
-  }
-  ? U
-  : never
+      Update: infer U
+    }
+    ? U
+    : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-  ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-    Update: infer U
-  }
-  ? U
-  : never
-  : never
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
 export type Enums<
   PublicEnumNameOrOptions extends
-  | keyof PublicSchema["Enums"]
-  | { schema: keyof Database },
+    | keyof PublicSchema["Enums"]
+    | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
-  : never = never,
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-  ? PublicSchema["Enums"][PublicEnumNameOrOptions]
-  : never
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-  | keyof PublicSchema["CompositeTypes"]
-  | { schema: keyof Database },
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
   }
-  ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-  : never = never,
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-  ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-  : never
-
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never

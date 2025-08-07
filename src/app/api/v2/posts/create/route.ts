@@ -108,6 +108,7 @@ export async function POST(request: NextRequest) {
     lat: randomizedCoords.lat,
     lng: randomizedCoords.lng,
     user_id: user.id,
+    poi_id: body.poi_id,
   });
 
   if (error) {
