@@ -125,6 +125,7 @@ export type Database = {
           continent: string | null
           created_at: string
           geometry: unknown
+          geometry_simplified: unknown | null
           id: string
           is_active: boolean | null
           iso_code_2: string
@@ -139,6 +140,7 @@ export type Database = {
           continent?: string | null
           created_at?: string
           geometry: unknown
+          geometry_simplified?: unknown | null
           id?: string
           is_active?: boolean | null
           iso_code_2: string
@@ -153,6 +155,7 @@ export type Database = {
           continent?: string | null
           created_at?: string
           geometry?: unknown
+          geometry_simplified?: unknown | null
           id?: string
           is_active?: boolean | null
           iso_code_2?: string
@@ -1763,11 +1766,30 @@ export type Database = {
           iso_code_3: string
         }[]
       }
+      get_country_for_point_optimized: {
+        Args: {
+          input_lat: number
+          input_lng: number
+        }
+        Returns: {
+          country_id: string
+          country_name: string
+          iso_code_2: string
+          iso_code_3: string
+        }[]
+      }
       get_country_geometry: {
         Args: {
           country_code: string
         }
         Returns: Json
+      }
+      get_country_id_for_point_optimized: {
+        Args: {
+          input_lat: number
+          input_lng: number
+        }
+        Returns: string
       }
       get_grid_cells_in_viewport: {
         Args: {
@@ -2430,6 +2452,10 @@ export type Database = {
           input_post_id: string
         }
         Returns: undefined
+      }
+      populate_missing_posts_precision: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       populate_pois_hexagon_coords: {
         Args: Record<PropertyKey, never>
