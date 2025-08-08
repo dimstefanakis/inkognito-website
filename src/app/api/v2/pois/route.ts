@@ -78,9 +78,9 @@ async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
 
     const data = await response.json();
     return data.elements || [];
-  } catch (error: any) {
+  } catch (error) {
     clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
+    if (error instanceof Error && error.name === 'AbortError') {
       console.error("OSM API request timed out after 10 seconds");
     } else {
       console.error("Error fetching from OSM:", error);
@@ -166,7 +166,7 @@ async function savePOIs(places: OSMElement[], lat: number, lng: number) {
           .from("pois")
           .insert(poisToInsert)
           .select();
-        
+
         if (fallbackError && !fallbackError.message.includes("duplicate")) {
           console.error("Error in fallback POI insert:", fallbackError);
         }
