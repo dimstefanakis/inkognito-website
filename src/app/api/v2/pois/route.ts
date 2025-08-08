@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
 export const runtime = "edge";
+export const maxDuration = 60;
 
 const FETCH_RADIUS = 500; // meters
 const MAX_AGE_DAYS = 30;
@@ -45,7 +46,7 @@ async function shouldFetchPOIs(lat: number, lng: number): Promise<boolean> {
 
 async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
   const query = `
-    [out:json][timeout:25];
+    [out:json][timeout:15];
     (
       node["name"]["amenity"](around:${FETCH_RADIUS},${lat},${lng});
       node["name"]["shop"](around:${FETCH_RADIUS},${lat},${lng});
@@ -55,6 +56,10 @@ async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
     out body;
   `;
 
+  // Create AbortController with 10 second timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+
   try {
     const response = await fetch(OSM_OVERPASS_API, {
       method: "POST",
@@ -62,7 +67,10 @@ async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: `data=${encodeURIComponent(query)}`,
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`OSM API error: ${response.statusText}`);
@@ -70,8 +78,13 @@ async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
 
     const data = await response.json();
     return data.elements || [];
-  } catch (error) {
-    console.error("Error fetching from OSM:", error);
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      console.error("OSM API request timed out after 10 seconds");
+    } else {
+      console.error("Error fetching from OSM:", error);
+    }
     return [];
   }
 }
@@ -137,44 +150,49 @@ async function savePOIs(places: OSMElement[], lat: number, lng: number) {
     }));
 
   if (poisToInsert.length > 0) {
-    // Since we don't have osm_id column, we'll use name + location as unique identifier
-    // This prevents duplicate POIs at the same location
-    for (const poi of poisToInsert) {
-      const { error: upsertError } = await supabase
+    // Batch insert all POIs at once
+    try {
+      const { error: insertError } = await supabase
         .from("pois")
-        .upsert(poi, {
+        .upsert(poisToInsert, {
           onConflict: "name,lat,lng",
           ignoreDuplicates: true,
         });
 
-      if (upsertError) {
-        // If conflict constraint doesn't exist, try insert and ignore duplicates
-        const { error: insertError } = await supabase
+      if (insertError) {
+        console.error("Error batch inserting POIs:", insertError);
+        // Try fallback: insert without upsert
+        const { error: fallbackError } = await supabase
           .from("pois")
-          .insert(poi)
-          .select()
-          .single();
-
-        if (insertError && !insertError.message.includes("duplicate")) {
-          console.error("Error inserting POI:", insertError);
+          .insert(poisToInsert)
+          .select();
+        
+        if (fallbackError && !fallbackError.message.includes("duplicate")) {
+          console.error("Error in fallback POI insert:", fallbackError);
         }
       }
+    } catch (error) {
+      console.error("Error saving POIs:", error);
     }
   }
 
   // Record the fetch history
-  const { error: historyError } = await supabase
-    .from("poi_fetch_history")
-    .insert({
-      lat: lat,
-      lng: lng,
-      radius: FETCH_RADIUS,
-      source: "openstreetmap",
-      geom: `POINT(${lng} ${lat})`,
-    });
+  try {
+    const { error: historyError } = await supabase
+      .from("poi_fetch_history")
+      .insert({
+        lat: lat,
+        lng: lng,
+        radius: FETCH_RADIUS,
+        source: "openstreetmap",
+        geom: `POINT(${lng} ${lat})`,
+      });
 
-  if (historyError) {
-    console.error("Error recording fetch history:", historyError);
+    if (historyError) {
+      console.error("Error recording fetch history:", historyError);
+    }
+  } catch (error) {
+    console.error("Error in fetch history:", error);
   }
 }
 
@@ -225,18 +243,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check if we need to fetch new POIs from OpenStreetMap
-    const shouldFetch = await shouldFetchPOIs(userLat, userLng);
-
-    if (shouldFetch) {
-      // Fetch from OpenStreetMap and save to database
-      const osmPlaces = await fetchOSMPlaces(userLat, userLng);
-      if (osmPlaces.length > 0) {
-        await savePOIs(osmPlaces, userLat, userLng);
-      }
-    }
-
-    // Always return the closest POIs from our database
+    // First, get existing POIs from database
     const { data: pois, error: rpcError } = await supabase.rpc("get_closest_pois", {
       input_user_id: user.id,
       user_lat: userLat,
@@ -251,6 +258,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Check if we need to fetch new POIs from OpenStreetMap
+    const shouldFetch = await shouldFetchPOIs(userLat, userLng);
+
+    if (shouldFetch) {
+      // Fire and forget: Update POIs in background
+      // This won't block the response
+      (async () => {
+        try {
+          const osmPlaces = await fetchOSMPlaces(userLat, userLng);
+          if (osmPlaces.length > 0) {
+            await savePOIs(osmPlaces, userLat, userLng);
+          }
+        } catch (error) {
+          console.error("Background POI update failed:", error);
+        }
+      })();
+    }
+
+    // Return existing POIs immediately
     return NextResponse.json({ data: pois || [] });
   } catch (error) {
     console.error("Unexpected error in POIs endpoint:", error);
