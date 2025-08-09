@@ -80,7 +80,7 @@ async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
     return data.elements || [];
   } catch (error) {
     clearTimeout(timeoutId);
-    if (error instanceof Error && error.name === 'AbortError') {
+    if (error instanceof Error && error.name === "AbortError") {
       console.error("OSM API request timed out after 10 seconds");
     } else {
       console.error("Error fetching from OSM:", error);
@@ -96,9 +96,30 @@ function mapOSMToCategory(tags: OSMElement["tags"]): string {
     nightlife: ["bar", "pub", "nightclub", "casino"],
     dating: ["cinema", "park", "cafe"],
     work_money: ["bank", "atm", "office", "coworking_space"],
-    shopping_fashion: ["clothes", "shoes", "jewelry", "mall", "department_store", "supermarket"],
-    travel_tourism: ["hotel", "motel", "guest_house", "attraction", "museum", "gallery"],
-    health_wellness: ["gym", "fitness_centre", "spa", "hospital", "pharmacy", "doctors"],
+    shopping_fashion: [
+      "clothes",
+      "shoes",
+      "jewelry",
+      "mall",
+      "department_store",
+      "supermarket",
+    ],
+    travel_tourism: [
+      "hotel",
+      "motel",
+      "guest_house",
+      "attraction",
+      "museum",
+      "gallery",
+    ],
+    health_wellness: [
+      "gym",
+      "fitness_centre",
+      "spa",
+      "hospital",
+      "pharmacy",
+      "doctors",
+    ],
     education_school: ["school", "university", "college", "library"],
     family_parenting: ["playground", "kindergarten", "toy_shop"],
     outdoor_nature: ["park", "garden", "nature_reserve", "beach"],
@@ -111,10 +132,14 @@ function mapOSMToCategory(tags: OSMElement["tags"]): string {
     home_living: ["furniture", "hardware", "garden_centre"],
   };
 
-  const osmTags = Object.values(tags).filter(Boolean).map(t => t ? t.toLowerCase() : '');
+  const osmTags = Object.values(tags)
+    .filter(Boolean)
+    .map((t) => (t ? t.toLowerCase() : ""));
 
   for (const [category, keywords] of Object.entries(categoryMap)) {
-    if (keywords.some(keyword => osmTags.some(tag => tag.includes(keyword)))) {
+    if (
+      keywords.some((keyword) => osmTags.some((tag) => tag.includes(keyword)))
+    ) {
       return category;
     }
   }
@@ -138,8 +163,8 @@ async function savePOIs(places: OSMElement[], lat: number, lng: number) {
   const supabase = await createClient();
 
   const poisToInsert = places
-    .filter(place => place.lat && place.lon && place.tags?.name)
-    .map(place => ({
+    .filter((place) => place.lat && place.lon && place.tags?.name)
+    .map((place) => ({
       name: place.tags!.name!,
       category: mapOSMToCategory(place.tags),
       types: getOSMTypes(place.tags),
@@ -201,22 +226,22 @@ export async function GET(request: NextRequest) {
     // Get auth token from headers
     const authHeader = request.headers.get("authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const token = authHeader.split("Bearer ")[1];
 
     // Create supabase client and verify token
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
       return NextResponse.json(
         { error: "Invalid authentication token" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -228,7 +253,7 @@ export async function GET(request: NextRequest) {
     if (!lat || !lng) {
       return NextResponse.json(
         { error: "Missing required parameters: lat, lng" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -239,22 +264,25 @@ export async function GET(request: NextRequest) {
     if (isNaN(userLat) || isNaN(userLng)) {
       return NextResponse.json(
         { error: "Invalid coordinates" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // First, get existing POIs from database
-    const { data: pois, error: rpcError } = await supabase.rpc("get_closest_pois", {
-      input_user_id: user.id,
-      user_lat: userLat,
-      user_lng: userLng,
-    });
+    const { data: pois, error: rpcError } = await supabase.rpc(
+      "get_closest_pois",
+      {
+        input_user_id: user.id,
+        user_lat: userLat,
+        user_lng: userLng,
+      },
+    );
 
     if (rpcError) {
       console.error("Error fetching POIs:", rpcError);
       return NextResponse.json(
         { error: "Failed to fetch POIs" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -264,16 +292,14 @@ export async function GET(request: NextRequest) {
     if (shouldFetch) {
       // Fire and forget: Update POIs in background
       // This won't block the response
-      (async () => {
-        try {
-          const osmPlaces = await fetchOSMPlaces(userLat, userLng);
-          if (osmPlaces.length > 0) {
-            await savePOIs(osmPlaces, userLat, userLng);
-          }
-        } catch (error) {
-          console.error("Background POI update failed:", error);
+      try {
+        const osmPlaces = await fetchOSMPlaces(userLat, userLng);
+        if (osmPlaces.length > 0) {
+          await savePOIs(osmPlaces, userLat, userLng);
         }
-      })();
+      } catch (error) {
+        console.error("Background POI update failed:", error);
+      }
     }
 
     // Return existing POIs immediately
@@ -282,7 +308,7 @@ export async function GET(request: NextRequest) {
     console.error("Unexpected error in POIs endpoint:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
