@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 export const runtime = "edge";
 export const maxDuration = 60;
 
-const FETCH_RADIUS = 500; // meters
+const FETCH_RADIUS = 300; // meters
 const MAX_AGE_DAYS = 30;
 const OSM_OVERPASS_API = "https://overpass-api.de/api/interpreter";
 
@@ -46,7 +46,7 @@ async function shouldFetchPOIs(lat: number, lng: number): Promise<boolean> {
 
 async function fetchOSMPlaces(lat: number, lng: number): Promise<OSMElement[]> {
   const query = `
-    [out:json][timeout:15];
+    [out:json][timeout:25];
     (
       node["name"]["amenity"](around:${FETCH_RADIUS},${lat},${lng});
       node["name"]["shop"](around:${FETCH_RADIUS},${lat},${lng});
