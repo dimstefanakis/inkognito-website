@@ -1,11 +1,23 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '../../../types_db'
 
-export async function createClient() {
+// Supabase's `createServerClient` returns a `SupabaseClient` whose generic
+// parameters are slightly misaligned in the current typings, which can lead to
+// table schemas collapsing to `never`. By asserting the generics explicitly we
+// keep full Database typing across the app.
+export type TypedSupabaseClient = SupabaseClient<
+  Database,
+  'public',
+  'public',
+  Database['public']
+>
+
+export async function createClient(): Promise<TypedSupabaseClient> {
   const cookieStore = await cookies()
 
-  return createServerClient<Database>(
+  const client = createServerClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
@@ -27,4 +39,8 @@ export async function createClient() {
       },
     }
   )
+
+  // Cast through unknown to align the generic parameter order with the
+  // SupabaseClient declaration used throughout the app.
+  return client as unknown as TypedSupabaseClient
 }
