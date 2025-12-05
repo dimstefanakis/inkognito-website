@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import type { Database } from "../../../../../types_db";
 
 export const runtime = "edge";
 export const maxDuration = 60;
@@ -26,7 +27,10 @@ interface OSMElement {
 async function shouldFetchPOIs(lat: number, lng: number): Promise<boolean> {
   const supabase = await createClient();
   try {
-    const { data, error } = await supabase.rpc("check_poi_fetch_needed", {
+    const { data, error } = await supabase.rpc<
+      "check_poi_fetch_needed",
+      Database["public"]["Functions"]["check_poi_fetch_needed"]
+    >("check_poi_fetch_needed", {
       check_lat: lat,
       check_lng: lng,
       check_radius: FETCH_RADIUS,
