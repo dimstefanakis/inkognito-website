@@ -1,53 +1,58 @@
-import Image from "next/image";
+import Link from 'next/link';
+import { Apple, ArrowRight, EyeOff } from 'lucide-react';
+import { LiveMapHero } from '@/components/LiveMapHero';
+
+const downloadLink = 'https://inkognito.app.link/?~channel=website&~feature=landing';
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[60px_1fr_50px] min-h-screen">
-      {/* Navbar */}
-      <nav className="flex items-center justify-between px-6">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/icon.png"  // Add your logo image later
-            alt="Inkognito logo"
-            width={32}
-            height={32}
-            className="rounded-full"
-          />
-          <span className="text-xl font-semibold">Leaks</span>
+    <main className="landing-shell">
+      <nav className="landing-nav" aria-label="Main navigation">
+        <Link className="brand-lockup" href="/" aria-label="Leaks home">
+          <span>Leaks.</span>
+        </Link>
+
+        <div className="nav-links" aria-label="Site links">
+          <a href="/privacy-policy">Privacy</a>
+          <a href="/terms-of-use">Terms</a>
+          <a href="/support">Support</a>
         </div>
       </nav>
 
-      {/* Main content */}
-      <main className="flex flex-col items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl mb-4">🚧</div>
-          <h1 className="text-2xl font-semibold max-w-md p-4">
-            Leaks is coming soon on android
-          </h1>
+      <section className="hero-stage" aria-label="Leaks app landing page">
+        <div className="trust-row" aria-label="App highlights">
+          <span>
+            <Apple size={17} fill="currentColor" strokeWidth={2.1} aria-hidden="true" />
+            #2 on app store
+          </span>
+          <span>
+            <EyeOff size={17} strokeWidth={2.3} aria-hidden="true" />
+            100k+ secrets shared
+          </span>
         </div>
-      </main>
 
-      {/* Simplified footer */}
-      <footer className="flex gap-6 items-center justify-center">
-        <a
-          className="hover:underline hover:underline-offset-4"
-          href="/privacy-policy"
-        >
-          Privacy
-        </a>
-        <a
-          className="hover:underline hover:underline-offset-4"
-          href="/terms-of-use"
-        >
-          Terms
-        </a>
-        <a
-          className="hover:underline hover:underline-offset-4"
-          href="/support"
-        >
-          Support
-        </a>
-      </footer>
-    </div>
+        <div className="hero-copy">
+          <h1>
+            <span className="hero-title-line">Your city&apos;s</span>
+            <span className="hero-title-line">unfiltered truth</span>
+          </h1>
+
+          <p className="hero-subtitle">
+            The things people won&apos;t say out loud, revealed.
+          </p>
+
+          <div className="hero-actions" aria-label="Download links">
+            <a className="download-button" href={downloadLink}>
+              Download the app
+              <ArrowRight size={18} aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+        <div className="map-composition" aria-label="Interactive map preview">
+          <LiveMapHero />
+        </div>
+      </section>
+    </main>
   );
 }
