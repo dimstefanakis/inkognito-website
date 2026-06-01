@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider"
 import { Analytics } from "@vercel/analytics/react"
@@ -16,8 +16,15 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Leaks - Spy on your neighbors",
-  description: "Browse and share anonymous secrets near you",
+  title: "Leaks. | Anonymous secrets around you",
+  description: "Open the map and see the anonymous secrets being shared nearby.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -26,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
