@@ -10,6 +10,17 @@ function readNumber(value: string | null): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function isAuthenticationError(error: {
+  code?: string;
+  message?: string;
+}): boolean {
+  return (
+    error.code === "PGRST301" ||
+    error.code === "42501" ||
+    /jwt|token|authenticat/i.test(error.message ?? "")
+  );
+}
+
 export async function GET(request: NextRequest) {
   const authorization =
     request.headers.get("authorization") ??
@@ -85,17 +96,6 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser(token);
-  if (userError || !user) {
-    return NextResponse.json(
-      { error: "Invalid or expired token" },
-      { status: 401 },
-    );
-  }
-
   const { data, error } = await supabase.rpc("get_home_feed_v1", {
     input_lat: lat,
     input_lng: lng,
@@ -106,11 +106,16 @@ export async function GET(request: NextRequest) {
   });
   if (error) {
     console.error("Error fetching Home feed:", error);
-    const status = error.code === "22023" ? 400 : 500;
+    const status = isAuthenticationError(error)
+      ? 401
+      : error.code === "22023"
+        ? 400
+        : 500;
     return NextResponse.json(
       {
-        error:
-          status === 400
+        error: status === 401
+          ? "Invalid or expired token"
+          : status === 400
             ? error.message
             : "An unexpected error occurred",
       },
