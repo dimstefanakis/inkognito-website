@@ -480,6 +480,10 @@ export type Database = {
       posts_v2: {
         Row: {
           col: number | null
+          coarse_location_kind: string | null
+          coarse_location_name: string | null
+          coarse_location_resolved_at: string | null
+          coarse_location_source: string | null
           content: string | null
           country_code: string | null
           country_id: string | null
@@ -505,6 +509,10 @@ export type Database = {
         }
         Insert: {
           col?: number | null
+          coarse_location_kind?: string | null
+          coarse_location_name?: string | null
+          coarse_location_resolved_at?: string | null
+          coarse_location_source?: string | null
           content?: string | null
           country_code?: string | null
           country_id?: string | null
@@ -530,6 +538,10 @@ export type Database = {
         }
         Update: {
           col?: number | null
+          coarse_location_kind?: string | null
+          coarse_location_name?: string | null
+          coarse_location_resolved_at?: string | null
+          coarse_location_source?: string | null
           content?: string | null
           country_code?: string | null
           country_id?: string | null
@@ -2541,6 +2553,14 @@ export type Database = {
           thread_id: number
           is_author: boolean
         }[]
+      }
+      reserve_post_location_geocode: {
+        Args: { input_monthly_limit?: number }
+        Returns: boolean
+      }
+      set_post_location_monthly_limit: {
+        Args: { input_monthly_limit: number }
+        Returns: Json
       }
       search_pois_by_name_and_distance: {
         Args: {

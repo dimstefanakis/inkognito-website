@@ -54,7 +54,8 @@ export async function GET(request: NextRequest) {
   const { count: totalCount, error: countError } = await supabase
     .from("posts_v2")
     .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .eq("content_type", "leak");
 
   if (countError) {
     console.error('Error getting post count:', countError);
@@ -66,6 +67,7 @@ export async function GET(request: NextRequest) {
     .from("posts_v2")
     .select("*, user_id(*)")
     .eq("user_id", user.id)
+    .eq("content_type", "leak")
     .order("created_at", { ascending: false })
     .range(offset, offset + limit - 1)
     .returns<Tables<"posts_v2">[]>();
@@ -85,6 +87,10 @@ export async function GET(request: NextRequest) {
     row: post.row,
     country_code: post.country_code,
     country_id: post.country_id,
+    coarse_location_kind: post.coarse_location_kind,
+    coarse_location_name: post.coarse_location_name,
+    coarse_location_resolved_at: post.coarse_location_resolved_at,
+    coarse_location_source: post.coarse_location_source,
     poi_id: post.poi_id,
     posted_from_poi: post.posted_from_poi,
     user_id: post.user_id,

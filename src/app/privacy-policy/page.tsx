@@ -2,12 +2,15 @@ export default function PrivacyPolicy() {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
       <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
+      <p className="text-sm opacity-70">Last updated: August 9, 2026</p>
 
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Overview</h2>
         <p>
-          Leaks (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;) is an anonymous secret-sharing community. This policy explains what
-          data we collect, how we use it, and the choices you have. By using Leaks you agree to the
+          Leaks (&quot;we&quot;, &quot;our&quot;, &quot;us&quot;) is an anonymous
+          local community for sharing Leaks, asking questions, and answering
+          people nearby. This policy explains what data we collect, how we use
+          it, and the choices you have. By using Leaks you agree to the
           practices described below.
         </p>
       </section>
@@ -22,21 +25,46 @@ export default function PrivacyPolicy() {
             you and is not visible to other users.
           </li>
           <li>
-            <strong>Approximate Location&nbsp;Data:</strong> We collect your coarse location (for example, the
-            centre of the city block you are on) when you create or browse secrets so that we can surface
-            nearby content. The location displayed with a secret is further obfuscated so that no one can
-            determine your exact or real-time whereabouts.
+            <strong>Location&nbsp;Data:</strong> We use location when you create or browse local content so
+            that we can surface relevant Leaks and questions. By default, the map shows a stable,
+            obfuscated point rather than the exact coordinates selected for a post or question. An
+            author can revisit their own selected location, while another authenticated user needs
+            Premium to reveal it. A reveal does not provide live location tracking or the
+            author&rsquo;s identity.
           </li>
           <li>
             <strong>Gender:</strong> You are asked to select a gender when signing up. This information is used
-            only to personalise your experience (for example, filters and statistics) and is never shared
-            publicly.
+            to personalise your experience (for example, filters and statistics). If you select male or
+            female, it may also appear as a hint to the author of a Leak or question you deliberately
+            open, answer, like, or dislike. Other selections are omitted from Viewer Hints.
           </li>
           <li>
-            <strong>Secret Content:</strong> The text of the secrets you post is stored on our servers so that
-            it can be displayed to other users.
+            <strong>Community Content:</strong> The text of the Leaks, questions, and answers you post is
+            stored on our servers so that it can be displayed to other users. For Ask, the selected place
+            label and an approximate map point are public; the exact target coordinates remain protected
+            until an eligible viewer chooses to reveal them.
           </li>
         </ul>
+      </section>
+
+      <section id="location" className="space-y-4 scroll-mt-8">
+        <h2 className="text-2xl font-semibold">Location and Viewer Hints</h2>
+        <p>
+          Leaks uses your approximate location to show local content and may create a Viewer Hint when you
+          deliberately open, answer, like, or dislike someone else&rsquo;s Leak or accepted Ask question.
+          When location is available for that interaction, Premium authors may see one stable obfuscated
+          area with a radius of at least 500 metres, never your exact coordinates, name, email, or account
+          ID. We may also show available device family and OS details, interaction time, whether you
+          returned, the surface you opened from, your replies or reactions on that content, and male or
+          female if selected in your profile. Other gender selections are omitted. Passive feed
+          impressions do not create Viewer Hints.
+        </p>
+        <p>
+          Viewer Hints and exact-location reveals are separate features. A Viewer Hint never grants an
+          author access to a viewer&rsquo;s exact location. If Viewer Hints is disabled, new hint capture and
+          Viewer Hint notifications stop, but this does not change how exact post or question locations
+          are revealed.
+        </p>
       </section>
 
       <section className="space-y-4">
@@ -77,8 +105,8 @@ export default function PrivacyPolicy() {
         <h2 className="text-2xl font-semibold">Data Protection</h2>
         <p>
           We employ industry-standard technical and organisational measures to safeguard the data we hold.
-          Approximate location data is stored separately from precise coordinates and is never shared with
-          other users or third parties.
+          Viewer Hints store only an obfuscated approximate area and never expose a viewer&rsquo;s exact
+          coordinates or account identifier.
         </p>
       </section>
 
