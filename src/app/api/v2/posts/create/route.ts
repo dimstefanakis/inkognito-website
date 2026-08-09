@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { reverseGeocodeCoarseLocation } from "@/lib/postLocation";
 import { NextRequest, NextResponse } from "next/server";
 
 function validateContent(text: string): { isValid: boolean; error?: string } {
@@ -91,15 +92,63 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
 
   // Validate content
+  if (typeof body.content !== "string") {
+    return NextResponse.json({ error: "Secret content is required" }, { status: 400 });
+  }
   const validation = validateContent(body.content);
   if (!validation.isValid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
-  // Randomize coordinates within 200m radius
+  const exactLat = Number(userData.lat);
+  const exactLng = Number(userData.lng);
+  if (
+    !Number.isFinite(exactLat) ||
+    !Number.isFinite(exactLng) ||
+    exactLat < -90 ||
+    exactLat > 90 ||
+    exactLng < -180 ||
+    exactLng > 180
+  ) {
+    return NextResponse.json({ error: "A valid location is required" }, { status: 400 });
+  }
+
+  let coarseLocation = null;
+  const mapboxToken = process.env.MAPBOX_POST_LOCATION_TOKEN;
+  if (mapboxToken) {
+    const configuredCap = Number(
+      process.env.MAPBOX_POST_LOCATION_MONTHLY_CAP ?? "13000",
+    );
+    const monthlyCap = Math.max(
+      1,
+      Math.min(Number.isFinite(configuredCap) ? configuredCap : 13000, 100000),
+    );
+    const { data: reserved, error: reserveError } = await supabase.rpc(
+      "reserve_post_location_geocode",
+      { input_monthly_limit: monthlyCap },
+    );
+    if (reserveError) {
+      console.warn("Post location budget reservation failed", reserveError.message);
+    } else if (reserved) {
+      try {
+        coarseLocation = await reverseGeocodeCoarseLocation({
+          lat: exactLat,
+          lng: exactLng,
+          accessToken: mapboxToken,
+        });
+      } catch (error) {
+        console.warn(
+          "Post location lookup failed",
+          error instanceof Error ? error.message : "Unknown error",
+        );
+      }
+    }
+  }
+
+  // Randomize coordinates within 200m only after the exact-point lookup.
   const randomizedCoords = randomizeCoordinates(
-    userData.lat || 0,
-    userData.lng || 0,
+    exactLat,
+    exactLng,
     200
   );
 
@@ -108,7 +157,16 @@ export async function POST(request: NextRequest) {
     lat: randomizedCoords.lat,
     lng: randomizedCoords.lng,
     user_id: user.id,
-    poi_id: body.poi_id,
+    poi_id: body.poi_id ?? null,
+    posted_from_poi: Boolean(body.poi_id),
+    coarse_location_name: coarseLocation?.name ?? null,
+    coarse_location_kind: coarseLocation?.kind ?? null,
+    coarse_location_source: coarseLocation
+      ? "mapbox_exact_pre_fuzz"
+      : null,
+    coarse_location_resolved_at: coarseLocation
+      ? new Date().toISOString()
+      : null,
   });
 
   if (error) {
