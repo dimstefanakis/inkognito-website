@@ -1700,6 +1700,13 @@ export type Database = {
         }
         Returns: string
       }
+      create_reply_submission_v1: {
+        Args: {
+          input_post_id: string
+          input_content: string
+        }
+        Returns: string
+      }
       generate_referral_code:
         | {
             Args: Record<PropertyKey, never>

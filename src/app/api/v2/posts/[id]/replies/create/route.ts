@@ -1,46 +1,40 @@
+import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
-import { createHash } from 'crypto'
-import { SupabaseClient } from '@supabase/supabase-js'
 
-function generatePostUserIdHash(postId: string, userId: string) {
-  if (!userId) {
-    // Generate a random number between 1000 and 9999
-    const randomId = Math.floor(1000 + Math.random() * 9000).toString();
-    return randomId;
+import type { Database } from '../../../../../../../../types_db'
+
+function isAuthenticationError(error: {
+  code?: string
+  message?: string
+}): boolean {
+  return (
+    error.code === 'PGRST301' ||
+    error.code === '42501' ||
+    /jwt|token|authenticat/i.test(error.message ?? '')
+  )
+}
+
+function replyErrorResponse(error: {
+  code?: string
+  hint?: string
+  message?: string
+}) {
+  if (isAuthenticationError(error)) {
+    return { status: 401, message: 'Invalid or expired token' }
   }
-  const hash = createHash('sha256').update(`${postId}-${userId}`).digest('hex');
-  // Ensure the result is between 1000 and 9999
-  const fourDigitId = (parseInt(hash.substring(0, 8), 16) % 9000) + 1000;
-  return fourDigitId.toString();
-} 
-
-async function findUniqueThreadId(
-  supabase: SupabaseClient,
-  postId: string,
-  userId: string | null
-) {
-  let attempts = 0;
-  const maxAttempts = 5;
-
-  while (attempts < maxAttempts) {
-    const threadId = generatePostUserIdHash(postId, (userId || '') + attempts);
-
-    // Check if this thread_id already exists for this post
-    const { data } = await supabase
-      .from('replies_v2')
-      .select('thread_id')
-      .eq('post_id', postId)
-      .eq('thread_id', threadId ? threadId : '')
-
-    if (!data || data.length === 0) {
-      return threadId;
-    }
-
-    attempts++;
+  if (error.code === 'P0002') {
+    return { status: 404, message: 'Post unavailable' }
   }
-
-  return null; // If we couldn't find a unique ID after max attempts
+  if (
+    error.hint === 'reply_moderation_backlog_limit' ||
+    error.hint === 'reply_moderation_hourly_limit'
+  ) {
+    return { status: 429, message: 'Too many replies. Try again later.' }
+  }
+  if (/between 1 and 500 characters/i.test(error.message ?? '')) {
+    return { status: 400, message: 'Reply must be between 1 and 500 characters' }
+  }
+  return { status: 500, message: 'An unexpected error occurred' }
 }
 
 export async function POST(
@@ -48,108 +42,94 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient()
-    const { id } = await params;
-    
-    const authHeader = request.headers.get("authorization") || request.headers.get("x-authorization");
-    const token = authHeader?.replace("Bearer ", "");
+    const authorization =
+      request.headers.get('authorization') ??
+      request.headers.get('x-authorization')
+    const token = authorization?.replace(/^Bearer\s+/i, '')
 
     if (!token) {
       return NextResponse.json(
-        { error: "No authorization token provided" },
+        { error: 'No authorization token provided' },
         { status: 401 }
-      );
+      )
     }
+
+    const supabaseUrl = process.env.SUPABASE_URL
+    const anonKey = process.env.SUPABASE_ANON_KEY
+    if (!supabaseUrl || !anonKey) {
+      console.error('Reply submission Supabase server configuration is missing')
+      return NextResponse.json(
+        { error: 'An unexpected error occurred' },
+        { status: 500 }
+      )
+    }
+
+    const supabase = createClient<Database>(supabaseUrl, anonKey, {
+      global: {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    })
 
     const {
       data: { user },
       error: userError,
-    } = await supabase.auth.getUser(token);
+    } = await supabase.auth.getUser(token)
 
     if (userError || !user) {
       return NextResponse.json(
-        { error: "Invalid or expired token" },
+        { error: 'Invalid or expired token' },
         { status: 401 }
-      );
+      )
     }
 
-    let content;
+    let content: unknown
     try {
-      ({ content } = await request.json());
-    } catch (error) {
-      console.log(error)
+      ;({ content } = await request.json())
+    } catch {
       return NextResponse.json(
         { error: 'Invalid JSON in request body' },
         { status: 400 }
-      );
+      )
     }
 
-    if (!content) {
+    if (typeof content !== 'string' || !content.trim()) {
       return NextResponse.json(
         { error: 'content is required' },
         { status: 400 }
       )
     }
 
-    let threadId = null
-
-    const existingThread = await supabase
-      .from('replies_v2')
-      .select('thread_id')
-      .eq('post_id', id)
-      .eq('user_id', user.id)
-
-    // check if the user has already replied to the post at least once
-    if (existingThread.data && existingThread.data.length > 0) {
-      threadId = existingThread.data[0].thread_id
-    } else {
-      threadId = await findUniqueThreadId(supabase, id, user.id)
-    }
-
-    let threadIdNumber: number | null = null;
-    if (threadId) {
-      threadIdNumber = Number(threadId);
-      if (isNaN(threadIdNumber)) {
-        return NextResponse.json(
-          { error: 'Invalid thread ID generated' },
-          { status: 500 }
-        );
+    const { id: postId } = await params
+    const { data: replyId, error } = await supabase.rpc(
+      'create_reply_submission_v1',
+      {
+        input_post_id: postId,
+        input_content: content,
       }
-    }
-
-    let isAuthor = false
-    const author = await supabase
-      .from('posts_v2')
-      .select('user_id')
-      .eq('id', id)
-      .eq('user_id', user.id)
-    if (author.data && author.data.length > 0) {
-      isAuthor = true
-    }
-
-    const { data, error } = await supabase
-      .from('replies_v2')
-      .insert({
-        post_id: id,
-        content,
-        user_id: user.id,
-        thread_id: threadIdNumber,
-        is_author: isAuthor
-      })
-      .select()
-      .single()
+    )
 
     if (error) {
-      console.error('Error creating reply:', error);
-      return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 })
+      console.error('Error creating reply submission:', error)
+      const response = replyErrorResponse(error)
+      return NextResponse.json(
+        { error: response.message },
+        { status: response.status }
+      )
     }
 
-    return NextResponse.json(data, { status: 201 })
+    return NextResponse.json(
+      { id: replyId, status: 'pending' },
+      { status: 201 }
+    )
   } catch (error) {
-    console.error('Error in POST /api/v2/posts/[id]/replies/create:', error);
+    console.error('Error in POST /api/v2/posts/[id]/replies/create:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
-    );
+    )
   }
-} 
+}
